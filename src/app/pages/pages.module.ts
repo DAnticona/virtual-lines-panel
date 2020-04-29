@@ -18,6 +18,7 @@ import { GraficoDonaComponent } from '../components/grafico-dona/grafico-dona.co
 import { ChartsModule } from 'ng2-charts';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
+import { AccountSettingsComponent } from './account-settings/account-settings.component';
 
 @NgModule({
 	declarations: [
@@ -27,6 +28,7 @@ import { CommonModule } from '@angular/common';
 		PagesComponent,
 		IncrementadorComponent,
 		GraficoDonaComponent,
+		AccountSettingsComponent,
 	],
 	exports: [DashboardComponent, ProgressComponent, Graficas1Component, PagesComponent],
 	imports: [SharedModule, PAGES_ROUTES, FormsModule, ChartsModule, BrowserModule, CommonModule],
