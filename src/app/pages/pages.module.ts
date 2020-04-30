@@ -19,6 +19,8 @@ import { ChartsModule } from 'ng2-charts';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { PromesasComponent } from './promesas/promesas.component';
+import { RxjsComponent } from './rxjs/rxjs.component';
 
 @NgModule({
 	declarations: [
@@ -29,6 +31,8 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 		IncrementadorComponent,
 		GraficoDonaComponent,
 		AccountSettingsComponent,
+		PromesasComponent,
+		RxjsComponent,
 	],
 	exports: [DashboardComponent, ProgressComponent, Graficas1Component, PagesComponent],
 	imports: [SharedModule, PAGES_ROUTES, FormsModule, ChartsModule, BrowserModule, CommonModule],
