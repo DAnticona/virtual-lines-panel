@@ -1,3 +1,7 @@
 #themecolors {
-    cursor: pointer;
+	cursor: pointer;
+}
+
+.pointer {
+	cursor: pointer;
 }
