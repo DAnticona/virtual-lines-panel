@@ -53,9 +53,8 @@ export class MedicoService {
 			url += '?token=' + this.usuarioService.token;
 			return this.http.put(url, medico).pipe(
 				map((res: any) => {
-					console.log(res);
 					Swal.fire('Medico Actualizado', medico.nombre, 'success');
-					return res;
+					return res.medico;
 				})
 			);
 		} else {

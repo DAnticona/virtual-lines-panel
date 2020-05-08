@@ -27,7 +27,6 @@ export class MedicoComponent implements OnInit {
 		this.activatedRoute.params.subscribe(params => {
 			let id = params['id'];
 			if (id !== 'nuevo') {
-				console.log('medico');
 				this.cargarMedico(id);
 			}
 		});
@@ -35,14 +34,15 @@ export class MedicoComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.hospitalService.cargarHospitales().subscribe((res: any) => (this.hospitales = res.hospitales));
-		this.modalUploadServcice.notificacion.subscribe((res: any) => (this.medico.img = res.medico.img));
+		this.modalUploadServcice.notificacion.subscribe((res: any) => {
+			this.medico.img = res.medico.img;
+		});
 	}
 
 	guardarMedico(f: NgForm) {
 		if (f.invalid) {
 			return;
 		}
-
 		this.medicoService.guardarMedico(this.medico).subscribe(medico => {
 			this.medico._id = medico._id;
 			this.router.navigate(['/medico', medico._id]);
