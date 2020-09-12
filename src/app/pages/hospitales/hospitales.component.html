@@ -52,7 +52,7 @@
 							<td class="w70">
 								<img
 									(click)="mostrarModal(hospital._id)"
-									[src]="hospital.img | imagen: 'hospital'"
+									[src]="hospital.img | image"
 									class="img-50 pointer"
 								/>
 							</td>
@@ -68,12 +68,8 @@
 						</tr>
 					</tbody>
 				</table>
-				<button (click)="cambiarDesde(-5)" class="btn btn-secondary">
-					Anteriores
-				</button>
-				<button (click)="cambiarDesde(5)" class="btn btn-secondary">
-					Siguientes
-				</button>
+				<button (click)="cambiarDesde(-5)" class="btn btn-secondary">Anteriores</button>
+				<button (click)="cambiarDesde(5)" class="btn btn-secondary">Siguientes</button>
 			</div>
 		</div>
 	</div>

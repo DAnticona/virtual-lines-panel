@@ -1,58 +1,88 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../models/user.model';
-import { UsuarioService } from 'src/app/services/service.index';
-import Swal from 'sweetalert2';
+import { UserService } from '../../services/user/user.service';
+import { DocumentTypeService } from '../../services/document-type/document-type.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styles: [],
+	selector: 'app-profile',
+	templateUrl: './profile.component.html',
+	styles: [],
 })
 export class ProfileComponent implements OnInit {
-  usuario: User;
-  imagenSubir: File;
-  imagenTemp: string | ArrayBuffer;
+	user: any = {};
+	equals = false;
+	docTypes: any[] = [];
+	// imagenSubir: File;
+	// imagenTemp: string | ArrayBuffer;
 
-  constructor(public usuarioService: UsuarioService) {
-    this.usuario = this.usuarioService.usuario;
-  }
+	constructor(public userService: UserService, public docTypeService: DocumentTypeService) {
+		this.docTypeService.getTypes().subscribe((res: any) => {
+			console.log(res);
+			this.docTypes = res;
+		});
 
-  ngOnInit(): void {}
+		this.userService.getUser(this.userService.user.id).subscribe((res: any) => {
+			console.log(res);
+			this.user = res;
+			this.user.roleId = res.role.roleId;
+			this.user.documentTypeId = res.docType.id;
+		});
+	}
 
-  guardar(usuario: User) {
-    this.usuario.name = usuario.name;
-    this.usuario.email = usuario.email;
+	ngOnInit(): void {}
 
-    this.usuarioService.actualizarUsuario(this.usuario).subscribe(res => {
-      console.log(res);
-    });
-  }
+	guardar(form: NgForm) {
+		console.log(this.user);
+		this.userService.updateUser(this.user).subscribe(res => {
+			console.log(res);
+		});
+	}
 
-  seleccionImagen(archivo: File) {
-    if (!archivo) {
-      this.imagenSubir = null;
-      return;
-    }
+	seleccionImagen(archivo: File) {
+		// if (!archivo) {
+		// 	this.imagenSubir = null;
+		// 	return;
+		// }
 
-    if (archivo.type.indexOf('image') < 0) {
-      Swal.fire({
-        title: 'No es una imagen',
-        text: 'El archivo no es una imagen',
-        icon: 'error',
-      });
-      this.imagenSubir = null;
-      return;
-    }
+		// if (archivo.type.indexOf('image') < 0) {
+		// 	Swal.fire({
+		// 		title: 'No es una imagen',
+		// 		text: 'El archivo no es una imagen',
+		// 		icon: 'error',
+		// 	});
+		// 	this.imagenSubir = null;
+		// 	return;
+		// }
 
-    this.imagenSubir = archivo;
+		// this.imagenSubir = archivo;
 
-    let reader = new FileReader();
-    let urlImagenTemp = reader.readAsDataURL(archivo);
+		// let reader = new FileReader();
+		// let urlImagenTemp = reader.readAsDataURL(archivo);
 
-    reader.onloadend = () => (this.imagenTemp = reader.result);
-  }
+		// reader.onloadend = () => (this.imagenTemp = reader.result);
+		console.log('Buscar Nueva Imagen');
+	}
 
-  cambiarImagen() {
-    this.usuarioService.cambiarImagen(this.imagenSubir, this.usuario.id);
-  }
+	cambiarImagen() {
+		// this.userService.cambiarImagen(this.imagenSubir, this.user.id);
+		console.log('Cambiar Imagen');
+	}
+
+	changePassword(password: string) {
+		if (!this.equals) {
+			console.log('Las contraseñas no son iguales');
+			return;
+		}
+		this.userService.changePassword(this.user.id, password).subscribe(res => {
+			console.log(res);
+		});
+	}
+
+	checkPassword(password1: string, password2: string) {
+		if (!password1 || password1 !== password2) {
+			this.equals = false;
+			return;
+		}
+		this.equals = true;
+	}
 }

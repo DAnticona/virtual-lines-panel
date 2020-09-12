@@ -7,15 +7,13 @@
 					<tbody>
 						<tr class="pointer" routerLink="/usuarios" *ngFor="let usuario of usuarios">
 							<td>
-								<img [src]="usuario.img | imagen" class="img-50 img-circle" />
+								<img [src]="usuario.img | image" class="img-50 img-circle" />
 							</td>
-							<td>{{ usuario.nombre }}</td>
+							<td>{{ usuario.name }}</td>
 						</tr>
 					</tbody>
 				</table>
-				<div *ngIf="usuarios.length == 0" class="alert alert-info">
-					No hay registros
-				</div>
+				<div *ngIf="usuarios.length == 0" class="alert alert-info">No hay registros</div>
 			</div>
 		</div>
 	</div>
@@ -26,14 +24,12 @@
 				<table *ngIf="medicos.length > 0" class="table table-hover">
 					<tbody>
 						<tr class="pointer" [routerLink]="['/medico', medico._id]" *ngFor="let medico of medicos">
-							<img [src]="medico.img | imagen: 'medico'" class="img-50 img-circle" />
+							<img [src]="medico.img | image" class="img-50 img-circle" />
 							<td>{{ medico.nombre }}</td>
 						</tr>
 					</tbody>
 				</table>
-				<div *ngIf="medicos.length == 0" class="alert alert-info">
-					No hay registros
-				</div>
+				<div *ngIf="medicos.length == 0" class="alert alert-info">No hay registros</div>
 			</div>
 		</div>
 	</div>
@@ -45,15 +41,13 @@
 					<tbody>
 						<tr class="pointer" routerLink="/hospitales" *ngFor="let hospital of hospitales">
 							<td>
-								<img [src]="hospital.img | imagen: 'hospital'" class="img-50 img-circle" />
+								<img [src]="hospital.img | image" class="img-50 img-circle" />
 							</td>
 							<td>{{ hospital.nombre }}</td>
 						</tr>
 					</tbody>
 				</table>
-				<div *ngIf="hospitales.length == 0" class="alert alert-info">
-					No hay registros
-				</div>
+				<div *ngIf="hospitales.length == 0" class="alert alert-info">No hay registros</div>
 			</div>
 		</div>
 	</div>

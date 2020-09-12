@@ -1,0 +1,162 @@
+<div class="row animated fadeIn" *ngIf="cargando">
+	<div class="col-sm-12 text-center">
+		<strong>Cargando</strong>
+		<br />
+		<i class="fa fa-spinner fa-pulse fa-2x"></i>
+		<br />
+		<span>Espere por favor</span>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">{{ product.name }} ({{ getQuantity() }} {{ measure.sign }})</h4>
+				<div class="table-responsive">
+					<table class="table table-hover color-table info-table">
+						<thead>
+							<tr class="text-sm-center">
+								<th></th>
+								<th>Fecha</th>
+								<th>Stock</th>
+								<th>Costo Unitario (S/.)</th>
+								<th>Precio Sugerido (S/.)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="pointer" *ngFor="let stock of stocks" (dblclick)="dbClick(stock)">
+								<td>
+									<button class="btn btn-outline-secondary btn-sm" (click)="dbClick(stock)">
+										<i class="fa fa-pencil"></i>
+									</button>
+								</td>
+								<td>{{ stock.date | date: 'dd/MM/yyyy' }}</td>
+								<td>{{ stock.quantity }}</td>
+								<td>{{ stock.unitCost }}</td>
+								<td>{{ stock.unitPrice }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<button class="btn btn-danger waves-effect waves-light m-r-10" (click)="back()">
+							<i class="fa fa-arrow-left fa-fw"></i>
+							Volver
+						</button>
+						<button
+							class="btn btn-info waves-effect waves-light m-r-10"
+							data-toggle="modal"
+							data-target="#stock"
+							(click)="new()"
+						>
+							<i class="fa fa-plus fa-fw"></i>Nuevo
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Crear/Editar Stock -->
+<div
+	class="modal fade"
+	id="stock"
+	tabindex="-1"
+	role="dialog"
+	aria-labelledby="stockLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<form ngNativeValidate #f="ngForm" (submit)="guardar(f)" class="form p-t-20">
+				<fieldset>
+					<div class="modal-header">
+						<h5 class="modal-title" id="stockLabel">Registro de Lote</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="exampleInputuname">Id</label>
+							<div class="input-group">
+								<div class="input-group-addon"><i class="ti-check-box"></i></div>
+								<input
+									[(ngModel)]="stock.stockId"
+									name="stockId"
+									type="text"
+									class="form-control"
+									readonly="readonly"
+								/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputuname">Fecha Lote</label>
+							<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-eye"></i></div>
+								<input
+									[(ngModel)]="stock.date"
+									name="date"
+									type="date"
+									class="form-control"
+									placeholder="Fecha de ingreso del lote"
+									required
+								/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputuname">Cantidad ({{ measure.sign }})</label>
+							<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-eye"></i></div>
+								<input
+									[(ngModel)]="stock.quantity"
+									name="quantity"
+									type="text"
+									class="form-control"
+									placeholder="Cantidad ingresada en el lote"
+									required
+								/>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="exampleInputuname">Costo Unitario S/.</label>
+							<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-eye"></i></div>
+								<input
+									[(ngModel)]="stock.unitCost"
+									name="unitCost"
+									type="text"
+									class="form-control"
+									placeholder="Costo unitario en soles"
+									required
+								/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputuname">Precio Sugerido S/.</label>
+							<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-eye"></i></div>
+								<input
+									[(ngModel)]="stock.unitPrice"
+									name="unitPrice"
+									type="text"
+									class="form-control"
+									placeholder="Precio unitario en soles"
+									required
+								/>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
+						<button type="submit" class="btn btn-outline-success">Guardar</button>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</div>

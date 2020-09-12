@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { URL_SERVICIOS } from '../../config/config';
 import { map } from 'rxjs/operators';
-import { UsuarioService } from '../usuario/usuario.service';
+import { UserService } from '../user/user.service';
 import Swal from 'sweetalert2';
 import { Medico } from '../../models/medico.model';
 
@@ -11,7 +11,7 @@ import { Medico } from '../../models/medico.model';
 })
 export class MedicoService {
 	totalMedicos = 0;
-	constructor(public http: HttpClient, public usuarioService: UsuarioService) {}
+	constructor(public http: HttpClient, public userService: UserService) {}
 
 	cargarMedicos() {
 		let url = URL_SERVICIOS + '/medico';
@@ -31,7 +31,7 @@ export class MedicoService {
 
 	borrarMedico(id: string) {
 		let url = URL_SERVICIOS + '/medico/' + id;
-		url += '?token=' + this.usuarioService.token;
+		url += '?token=' + this.userService.token;
 
 		return this.http.delete(url).pipe(
 			map((res: any) => {
@@ -50,7 +50,7 @@ export class MedicoService {
 
 		if (medico._id) {
 			url += '/' + medico._id;
-			url += '?token=' + this.usuarioService.token;
+			url += '?token=' + this.userService.token;
 			return this.http.put(url, medico).pipe(
 				map((res: any) => {
 					Swal.fire('Medico Actualizado', medico.nombre, 'success');
@@ -58,7 +58,7 @@ export class MedicoService {
 				})
 			);
 		} else {
-			url += '?token=' + this.usuarioService.token;
+			url += '?token=' + this.userService.token;
 			return this.http.post(url, medico).pipe(
 				map((res: any) => {
 					Swal.fire('Medico Creado', medico.nombre, 'success');

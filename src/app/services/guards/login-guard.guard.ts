@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { UsuarioService } from '../usuario/usuario.service';
+import { UserService } from '../user/user.service';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class LoginGuardGuard implements CanActivate {
-	constructor(public usuarioService: UsuarioService, public router: Router) {}
+	constructor(public userService: UserService, public router: Router) {}
 	canActivate(): boolean {
-		if (this.usuarioService.estaLogueado()) {
+		if (this.userService.isLogged()) {
 			// console.log('Logueado');
 			return true;
 		} else {

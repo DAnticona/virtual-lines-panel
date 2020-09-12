@@ -1,0 +1,77 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-11">
+						<input
+							#term
+							type="text"
+							class="form-control"
+							placeholder="Búsqueda de Productos"
+							(keyup.enter)="search(term.value)"
+						/>
+					</div>
+					<div class="col-md-1">
+						<button class="btn btn-outline-info mb-2" (click)="search(term.value)">
+							<i class="fa fa-search fa-fw"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row animated fadeIn" *ngIf="cargando">
+	<div class="col-sm-12 text-center">
+		<strong>Cargando</strong>
+		<br />
+		<i class="fa fa-spinner fa-pulse fa-2x"></i>
+		<br />
+		<span>Espere por favor</span>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">Lista de Productos</h4>
+				<div class="table-responsive">
+					<table class="table table-hover color-table info-table">
+						<thead>
+							<tr class="text-sm-center">
+								<th></th>
+								<th>Id</th>
+								<th>Descripción</th>
+								<th>Stock</th>
+								<th>Unidad de Medida</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="pointer" *ngFor="let product of products" (dblclick)="dbClick(product)">
+								<td>
+									<button class="btn btn-outline-secondary btn-sm" (click)="dbClick(product)">
+										<i class="fa fa-pencil"></i>
+									</button>
+								</td>
+								<td>{{ product.productId }}</td>
+								<td>{{ product.name }}</td>
+								<td>{{ getStock(product) }}</td>
+								<td>{{ product.measure.name }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<button class="btn btn-info waves-effect waves-light m-r-10" (click)="new()">
+							<i class="fa fa-plus fa-fw"></i>Nuevo
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

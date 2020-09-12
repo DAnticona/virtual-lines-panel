@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { SubirArchivoService } from '../service.index';
 import { URL_SERVICIOS } from 'src/app/config/config';
 import { map } from 'rxjs/operators';
-import { UsuarioService } from '../usuario/usuario.service';
+import { UserService } from '../user/user.service';
 import Swal from 'sweetalert2';
 
 @Injectable({
@@ -18,9 +18,9 @@ export class HospitalService {
 		public http: HttpClient,
 		public router: Router,
 		public subirArchivoService: SubirArchivoService,
-		public usuarioService: UsuarioService
+		public userService: UserService
 	) {
-		this.token = usuarioService.token;
+		this.token = userService.token;
 	}
 
 	cargarHospitales(desde: number = 0) {

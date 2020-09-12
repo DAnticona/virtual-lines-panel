@@ -1,0 +1,393 @@
+<div class="row animated fadeIn">
+	<div class="col-lg-12">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">Venta</h4>
+				<form ngNativeValidate #f="ngForm" (submit)="guardar()" class="form p-t-20">
+					<fieldset>
+						<div class="form-group">
+							<label for="exampleInputuname">Id</label>
+							<div class="input-group">
+								<div class="input-group-addon"><i class="ti-check-box"></i></div>
+								<input
+									[(ngModel)]="sale.saleId"
+									name="saleId"
+									type="text"
+									class="form-control"
+									readonly="readonly"
+								/>
+							</div>
+						</div>
+						<div class="form-group">
+							<button
+								class="btn btn-outline-info waves-effect waves-light m-r-10"
+								type="button"
+								(click)="getClients()"
+								data-toggle="modal"
+								data-target="#clients"
+								[disabled]="!nuevaVenta"
+							>
+								<i class="fa fa-search fa-fw"></i>
+								Buscar Cliente
+							</button>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputuname">Documento del Cliente</label>
+							<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-eye"></i></div>
+								<input
+									[(ngModel)]="client.document"
+									name="document"
+									type="text"
+									class="form-control"
+									placeholder="Nro documento del cliente"
+									readonly="readonly"
+								/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputuname">Nombre del Cliente</label>
+							<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-eye"></i></div>
+								<input
+									[(ngModel)]="client.name"
+									name="name"
+									type="text"
+									class="form-control"
+									placeholder="Nombre del cliente"
+									readonly="readonly"
+								/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputuname">Fecha de Venta</label>
+							<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-eye"></i></div>
+								<input
+									[(ngModel)]="sale.date"
+									name="date"
+									type="date"
+									class="form-control"
+									placeholder="Fecha de la venta"
+									[disabled]="!nuevaVenta"
+									required
+								/>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-12">
+								<div class="checkbox checkbox-primary pull-left p-t-0">
+									<input
+										[(ngModel)]="active"
+										name="active"
+										id="checkbox-signup"
+										type="checkbox"
+										class="filled-in chk-col-light-blue"
+										[disabled]="!active"
+										(change)="activeValue(active ? 'S' : 'N')"
+									/>
+									<label for="checkbox-signup">Activo</label>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="table-responsive">
+									<table class="table table-hover color-table info-table">
+										<thead>
+											<tr class="text-sm-center">
+												<th></th>
+												<th>Item</th>
+												<th>Cantidad</th>
+												<th>Descripción</th>
+												<th>Precio Unitario</th>
+												<th>Importe</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr class="pointer" *ngFor="let item of items; let i = index">
+												<td>
+													<button
+														type="button"
+														class="btn btn-outline-secondary btn-sm"
+														[disabled]="!nuevaVenta"
+														data-toggle="modal"
+														data-target="#item"
+														(click)="editItem(item)"
+													>
+														<i class="fa fa-pencil"></i>
+													</button>
+												</td>
+												<td>{{ i + 1 }}</td>
+												<td>{{ item.quantity }}</td>
+												<td>{{ item.productName }}</td>
+												<td>{{ item.unitPrice | currency: 'S/.' }}</td>
+												<td>{{ item.totalPrice | currency: 'S/.' }}</td>
+												<td>
+													<button
+														type="button"
+														class="btn btn-outline-danger btn-sm"
+														[disabled]="!nuevaVenta"
+														(click)="deleteItem(item)"
+													>
+														<i class="fa fa-trash"></i>
+													</button>
+												</td>
+											</tr>
+											<tr>
+												<th colspan="6">
+													<button
+														type="button"
+														class="btn btn-info waves-effect waves-light m-r-10"
+														[disabled]="!nuevaVenta"
+														data-toggle="modal"
+														data-target="#item"
+														(click)="addItem()"
+													>
+														<i class="fa fa-plus fa-fw"></i>
+													</button>
+												</th>
+											</tr>
+										</tbody>
+										<tbody>
+											<tr>
+												<th colspan="5">Total Venta</th>
+												<th>{{ sale.amount | currency: 'S/.' }}</th>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="row">
+									<div class="col-md-6"></div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<button
+									type="button"
+									class="btn btn-danger waves-effect waves-light m-r-10"
+									(click)="volver()"
+								>
+									<i class="fa fa-arrow-left fa-fw"></i>
+									Volver
+								</button>
+								<button
+									type="submit"
+									[disabled]="!nuevaVenta"
+									class="btn btn-success waves-effect waves-light m-r-10"
+								>
+									<i class="fa fa-save fa-fw"></i>
+									Guardar
+								</button>
+							</div>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Buscar Clientes -->
+<div
+	class="modal fade"
+	id="clients"
+	tabindex="-1"
+	role="dialog"
+	aria-labelledby="clientsLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="clientsLabel">Búsqueda de Clientes</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-10 form-group">
+						<input
+							#term
+							type="text"
+							class="form-control"
+							placeholder="Ingrese el RUC del cliente"
+							(keyup.enter)="searchClient(term.value)"
+						/>
+					</div>
+					<div class="col-2 form-group">
+						<button
+							type="button"
+							class="btn btn-outline-info btn-block mb-2"
+							(click)="searchClient(term.value)"
+						>
+							<i class="fa fa-search fa-fw"></i>
+						</button>
+					</div>
+				</div>
+				<table class="table table-hover color-table info-table">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Tipo</th>
+							<th>Nombre o Razón Social</th>
+							<th>Documento</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr
+							class="pointer"
+							*ngFor="let client of clients"
+							[ngClass]="{ 'bg-light-info': idClientSelected == client.clientId }"
+							(click)="idClientSelected = client.clientId"
+							(dblclick)="getClient()"
+						>
+							<td>{{ client.clientId }}</td>
+							<td>{{ client.type.shortname }}</td>
+							<td *ngIf="client.company">{{ client.company.legalName }}</td>
+							<td *ngIf="!client.company">{{ client.person.name }} {{ client.person.lastname }}</td>
+							<td *ngIf="client.company">{{ client.company.documentNu }}</td>
+							<td *ngIf="!client.company">{{ client.person.documentNu }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-outline-success" (click)="getClient()">Seleccionar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Agregar Item -->
+<div class="modal fade" id="item" tabindex="-1" role="dialog" aria-labelledby="itemLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<form
+				ngNativeValidate
+				#f1="ngForm"
+				(keydown.enter)="$event.preventDefault()"
+				(submit)="getItem(f1)"
+				class="form p-t-20"
+			>
+				<div class="modal-header">
+					<h5 class="modal-title" id="itemLabel">Items</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-12">
+							<div class="form-group">
+								<label for="productName">Producto</label>
+								<div class="input-group">
+									<div class="input-group-addon"><i class="ti-check-box"></i></div>
+									<input
+										[(ngModel)]="item.productName"
+										name="productName"
+										type="text"
+										class="form-control"
+										readonly
+										required
+									/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-6 form-group">
+									<label for="quantity">Cantidad</label>
+									<div class="input-group">
+										<div class="input-group-addon"><i class="ti-check-box"></i></div>
+										<input
+											[(ngModel)]="item.quantity"
+											name="quantity"
+											type="text"
+											class="form-control"
+											placeholder="Cantidad"
+											required
+										/>
+									</div>
+								</div>
+								<div class="col-6 form-group">
+									<label for="unitPrice">Precio Unitario</label>
+									<div class="input-group">
+										<div class="input-group-addon"><i class="fa fa-eye"></i></div>
+										<input
+											[(ngModel)]="item.unitPrice"
+											name="unitPrice"
+											type="text"
+											class="form-control"
+											placeholder="Precio unitario"
+											required
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<h6>Lista de Productos</h6>
+					<div class="row txt-10">
+						<div class="col-10 form-group">
+							<input
+								#term1
+								type="text"
+								class="form-control form-control-sm"
+								placeholder="Nombre del producto"
+								(keyup.enter)="searchProduct(term1.value)"
+							/>
+						</div>
+						<div class="col-2 form-group">
+							<button
+								type="button"
+								class="btn btn-outline-info btn-sm btn-block mb-2"
+								(click)="searchProduct(term1.value)"
+							>
+								<i class="fa fa-search fa-fw"></i>
+							</button>
+						</div>
+					</div>
+					<table class="table table-hover color-table info-table table-sm txt-10">
+						<thead>
+							<tr>
+								<th>Id</th>
+								<th>Nombre</th>
+								<th>Fecha</th>
+								<th>Medida</th>
+								<th>Stock</th>
+								<th>Costo Unitario</th>
+								<th>Precio Sugerido</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								class="pointer"
+								*ngFor="let stock of stocks"
+								(click)="selectStock(stock)"
+								[ngClass]="{
+									'bg-light-info': idProductSelected == stock.productId && idStockSelected == stock.stockId
+								}"
+							>
+								<td>{{ stock.productId }}</td>
+								<td>{{ stock.productName }}</td>
+								<td>{{ stock.date | date: 'dd/MM/yyyy' }}</td>
+								<td>{{ stock.measureSign }}</td>
+								<td>{{ stock.quantity }}</td>
+								<td>{{ stock.unitCost | currency: 'S/.' }}</td>
+								<td>{{ stock.unitPrice | currency: 'S/.' }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
+					<button type="submit" class="btn btn-outline-success">Seleccionar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

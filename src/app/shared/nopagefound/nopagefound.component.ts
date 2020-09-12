@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../../services/user/user.service';
 
 declare function init_plugins();
 
@@ -53,7 +54,7 @@ declare function init_plugins();
 })
 export class NopagefoundComponent implements OnInit {
 	ano: number = new Date().getFullYear();
-	constructor() {}
+	constructor(public userService: UserService) {}
 
 	ngOnInit(): void {
 		init_plugins();

@@ -1,66 +1,201 @@
 <div class="row animated fadeIn">
-  <div class="col-lg-7">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title">Perfil del usaurio</h4>
-        <h6 class="card-subtitle">nombre usuario</h6>
-        <form ngNativeValidate #f="ngForm" (ngSubmit)="guardar(f.value)" class="form p-t-20">
-          <div class="form-group">
-            <label for="exampleInputuname">Nombre de usuario</label>
-            <div class="input-group">
-              <div class="input-group-addon"><i class="ti-user"></i></div>
-              <input
-                [ngModel]="usuario.name"
-                name="nombre"
-                type="text"
-                class="form-control"
-                placeholder="Nombre de usuario"
-                required
-              />
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="exampleInputEmail1">Correo electrónico</label>
-            <div class="input-group">
-              <div class="input-group-addon"><i class="ti-email"></i></div>
-              <!-- [disabled]="usuario.google" -->
-              <input
-                [ngModel]="usuario.email"
-                name="email"
-                type="email"
-                class="form-control"
-                placeholder="Correo electronico"
-                required
-              />
-            </div>
-          </div>
-          <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">
-            <i class="fa fa-save fa-fw"></i>Guardar
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
+	<div class="col-lg-7">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">{{ user.username }}</h4>
+				<h6 *ngIf="user.role" class="card-subtitle">{{ user.role.name }}</h6>
+				<form ngNativeValidate #f="ngForm" (ngSubmit)="guardar(f.value)" class="form p-t-20">
+					<div class="form-group">
+						<label for="exampleInputuname">Id</label>
+						<div class="input-group">
+							<div class="input-group-addon"><i class="ti-check-box"></i></div>
+							<input [(ngModel)]="user.id" name="id" type="text" class="form-control" readonly="readonly" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="exampleInputuname">Tipo de Documento</label>
+						<div class="input-group">
+							<div class="input-group-addon"><i class="fa fa-address-card-o"></i></div>
+							<select
+								class="form-control custom-select"
+								[(ngModel)]="user.documentTypeId"
+								name="documentTypeId"
+							>
+								<option *ngFor="let type of docTypes" [ngValue]="type.id">{{ type.name }}</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="exampleInputuname">Documento de Identidad</label>
+						<div class="input-group">
+							<div class="input-group-addon"><i class="fa fa-address-card-o"></i></div>
+							<input
+								[(ngModel)]="user.documentNu"
+								name="documentNu"
+								type="text"
+								class="form-control"
+								placeholder="Nro de documento"
+								required
+							/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="exampleInputuname">Nombre</label>
+						<div class="input-group">
+							<div class="input-group-addon"><i class="ti-user"></i></div>
+							<input
+								[(ngModel)]="user.name"
+								name="name"
+								type="text"
+								class="form-control"
+								placeholder="Nombre de usuario"
+								required
+							/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="exampleInputuname">Apellido Paterno</label>
+						<div class="input-group">
+							<div class="input-group-addon"><i class="ti-user"></i></div>
+							<input
+								[(ngModel)]="user.lastname"
+								name="lastname"
+								type="text"
+								class="form-control"
+								placeholder="Nombre de usuario"
+								required
+							/>
+						</div>
+					</div>
+					<div class="form-group">
+						<div>
+							<label>Género</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input
+								class="form-check-input"
+								[(ngModel)]="user.gender"
+								type="radio"
+								name="gender"
+								id="inlineRadio1"
+								value="M"
+							/>
+							<label class="form-check-label" for="inlineRadio1">Masculino</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input
+								class="form-check-input"
+								[(ngModel)]="user.gender"
+								type="radio"
+								name="gender"
+								id="inlineRadio2"
+								value="F"
+							/>
+							<label class="form-check-label" for="inlineRadio2">Femenino</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="exampleInputEmail1">Correo electrónico</label>
+						<div class="input-group">
+							<div class="input-group-addon"><i class="ti-email"></i></div>
+							<input
+								[(ngModel)]="user.email"
+								name="email"
+								type="email"
+								class="form-control"
+								placeholder="Correo electronico"
+								required
+							/>
+						</div>
+					</div>
+					<button type="submit" class="btn btn-success waves-effect waves-light m-r-10">
+						<i class="fa fa-save fa-fw"></i>
+						Guardar
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
 
-  <div class="col-lg-5">
-    <div class="card">
-      <div class="card-body text-center">
-        <h4 class="card-title">Imagen de usuario</h4>
-        <h6 class="card-subtitle">nombre usuario</h6>
-        <img *ngIf="!imagenTemp" [src]="usuario.img | imagen" class="w150" />
-        <img *ngIf="imagenTemp" [src]="imagenTemp" class="w150" />
-        <input type="file" (change)="seleccionImagen($event.target.files[0])" />
-        <br />
-        <br />
-        <button
-          (click)="cambiarImagen()"
-          [disabled]="!imagenSubir"
-          type="button"
-          class="btn btn-block btn-success waves-effect waves-light m-r-10"
-        >
-          <i class="fa fa-save fa-fw"></i>Actualizar imagen
-        </button>
-      </div>
-    </div>
-  </div>
+	<div class="col-lg-5">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="card-body">
+						<h4 class="card-title">Imagen de usuario</h4>
+						<h6 class="card-subtitle">{{ user.username }}</h6>
+						<!-- <img *ngIf="!imagenTemp" [src]="user.img | imagen" class="w150" /> -->
+						<!-- <img *ngIf="imagenTemp" [src]="imagenTemp" class="w150" /> -->
+						<div class="text-center">
+							<label class="file-input pointer">
+								<input
+									name="changeImage"
+									type="file"
+									(change)="seleccionImagen($event.target.files[0])"
+									hidden
+								/>
+								<img [src]="user.image | image" class="w150" alt="user" />
+							</label>
+						</div>
+						<div class="text-center">
+							<!-- [disabled]="!imagenSubir" -->
+							<button
+								(click)="cambiarImagen()"
+								type="button"
+								class="btn btn-success waves-effect waves-light m-r-10"
+							>
+								<i class="fa fa-save fa-fw"></i>
+								Guardar imagen
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="card-body">
+						<h4 class="card-title">Cambio de Contraseña</h4>
+						<h6 class="card-subtitle">{{ user.username }}</h6>
+						<form>
+							<div class="form-group">
+								<label for="password1">Nueva Contraseña</label>
+								<input
+									#password1
+									type="password"
+									class="form-control"
+									id="password1"
+									(keyup)="checkPassword(password1.value, password2.value)"
+									placeholder="Ingrese la nueva contraseña"
+								/>
+							</div>
+							<div class="form-group">
+								<label for="password2">Repetir Contraseña</label>
+								<input
+									#password2
+									type="password"
+									class="form-control"
+									id="password2"
+									(keyup)="checkPassword(password1.value, password2.value)"
+									placeholder="Vuelva a ingresar la nueva contraseña"
+								/>
+							</div>
+							<div class="text-center">
+								<button
+									type="button"
+									[disabled]="!equals"
+									[ngClass]="{ 'btn btn-success': equals, 'button-disabled': !equals }"
+									(click)="changePassword(password1.value)"
+								>
+									<i class="fa fa-save fa-fw"></i>
+									Cambiar Contraseña
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

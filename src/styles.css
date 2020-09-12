@@ -14,8 +14,36 @@
 	width: 70px;
 }
 
+.img-300 {
+	width: 300px;
+}
+
+.img-200 {
+	width: 200px;
+}
+
+.img-150 {
+	width: 150px;
+}
+
+.img-100 {
+	width: 100px;
+}
+
 .img-50 {
 	width: 50px;
+}
+
+.img-25 {
+	width: 25px;
+}
+
+.txt-10 {
+	font-size: 10pt;
+}
+
+.button-disabled {
+	color: rgb(41, 41, 41);
 }
 
 .fondo-negro {

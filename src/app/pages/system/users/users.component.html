@@ -1,0 +1,75 @@
+<!-- <div class="row animated fadeIn">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body">
+				<input
+					#input
+					(keyup)="buscarUsuario(input.value)"
+					type="text"
+					class="form-control"
+					placeholder="Buscar usuario..."
+				/>
+			</div>
+		</div>
+	</div>
+</div> -->
+
+<div class="row animated fadeIn" *ngIf="cargando">
+	<div class="col-sm-12 text-center">
+		<strong>Cargando</strong>
+		<br />
+		<i class="fa fa-spinner fa-pulse fa-2x"></i>
+		<br />
+		<span>Espere por favor</span>
+	</div>
+</div>
+
+<div class="row animated fadeIn" *ngIf="!cargando">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body">
+				<h3 class="card-title">Usuarios registrados</h3>
+				<table class="table table-hover color-table info-table">
+					<thead>
+						<tr>
+							<th>Imagen</th>
+							<th>Usuario</th>
+							<th>Nombre</th>
+							<th>Rol</th>
+							<th>Estado</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let user of users" class="pointer" (dblclick)="choose(user)">
+							<td class="w70">
+								<img [src]="user.img | image" class="img-50 img-circle pointer" />
+							</td>
+							<td>{{ user.username }}</td>
+							<td>{{ user.name }}</td>
+							<td>{{ user.role.name }}</td>
+							<td>
+								<span *ngIf="user.activeFg == 'S'" class="badge badge-success">Activo</span>
+								<span *ngIf="user.activeFg == 'N'" class="badge badge-secondary">Inactivo</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="row">
+					<div class="col-md-6">
+						<button class="btn btn-info waves-effect waves-light m-r-10" (click)="nuevo()">
+							<i class="fa fa-plus fa-fw"></i>Nuevo
+						</button>
+					</div>
+				</div>
+
+				<!-- <button (click)="cambiarDesde(-5)" class="btn btn-secondary">
+					Anteriores
+				</button>
+				<button (click)="cambiarDesde(5)" class="btn btn-secondary">
+					Siguientes
+				</button> -->
+			</div>
+		</div>
+	</div>
+</div>
