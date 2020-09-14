@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 export class InputsComponent implements OnInit {
 	products: any[] = [];
 	cargando = true;
+	pageNu = 1;
+	pages = 1;
 
 	constructor(public productService: ProductService, public router: Router) {
 		this.loadProducts();
@@ -17,10 +19,17 @@ export class InputsComponent implements OnInit {
 
 	ngOnInit(): void {}
 
+	getProducts(pageNu: number) {
+		this.productService.getProducts(pageNu).subscribe((res: any) => {
+			this.products = res.object;
+			this.pageNu = Number(pageNu);
+		});
+	}
+
 	loadProducts() {
-		this.productService.getProducts().subscribe((res: any) => {
-			console.log(res);
-			this.products = res;
+		this.productService.getProducts(this.pageNu).subscribe((res: any) => {
+			this.products = res.object;
+			this.pages = Math.ceil(res.count / 10);
 			this.products.sort((a, b) => a.productId - b.productId);
 			this.cargando = false;
 		});

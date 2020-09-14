@@ -10,10 +10,21 @@ import { SaleService } from '../../../services/sale/sale.service';
 export class SalesComponent implements OnInit {
 	cargando = false;
 	sales: any[] = [];
+	pageNu = 1;
+	pages = 1;
 	constructor(public router: Router, public saleService: SaleService) {
-		this.saleService.getSales().subscribe((res: any) => {
+		this.saleService.getSales(this.pageNu).subscribe((res: any) => {
 			console.log(res);
-			this.sales = res;
+			this.sales = res.object;
+			this.pages = Math.ceil(res.count / 10);
+		});
+	}
+
+	getSales(pageNu: number) {
+		// console.log(pageNu);
+		this.saleService.getSales(pageNu).subscribe((res: any) => {
+			this.sales = res.object;
+			this.pageNu = Number(pageNu);
 		});
 	}
 

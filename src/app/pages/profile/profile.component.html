@@ -4,7 +4,7 @@
 			<div class="card-body">
 				<h4 class="card-title">{{ user.username }}</h4>
 				<h6 *ngIf="user.role" class="card-subtitle">{{ user.role.name }}</h6>
-				<form ngNativeValidate #f="ngForm" (ngSubmit)="guardar(f.value)" class="form p-t-20">
+				<form ngNativeValidate #f="ngForm" (ngSubmit)="guardar(f)" class="form p-t-20">
 					<div class="form-group">
 						<label for="exampleInputuname">Id</label>
 						<div class="input-group">
@@ -20,6 +20,7 @@
 								class="form-control custom-select"
 								[(ngModel)]="user.documentTypeId"
 								name="documentTypeId"
+								required
 							>
 								<option *ngFor="let type of docTypes" [ngValue]="type.id">{{ type.name }}</option>
 							</select>
@@ -132,17 +133,20 @@
 									name="changeImage"
 									type="file"
 									(change)="seleccionImagen($event.target.files[0])"
+									accept="image/*"
 									hidden
 								/>
-								<img [src]="user.image | image" class="w150" alt="user" />
+								<img *ngIf="!imageTmp" [src]="user.image | image" class="w150" />
+								<img *ngIf="imageTmp" [src]="imageTmp" class="w150" />
+								<!-- <img [src]="user.image | image" class="w150" alt="user" /> -->
 							</label>
 						</div>
 						<div class="text-center">
-							<!-- [disabled]="!imagenSubir" -->
 							<button
 								(click)="cambiarImagen()"
 								type="button"
 								class="btn btn-success waves-effect waves-light m-r-10"
+								[disabled]="!imagenSubir"
 							>
 								<i class="fa fa-save fa-fw"></i>
 								Guardar imagen
@@ -185,7 +189,7 @@
 								<button
 									type="button"
 									[disabled]="!equals"
-									[ngClass]="{ 'btn btn-success': equals, 'button-disabled': !equals }"
+									class="btn btn-success"
 									(click)="changePassword(password1.value)"
 								>
 									<i class="fa fa-save fa-fw"></i>

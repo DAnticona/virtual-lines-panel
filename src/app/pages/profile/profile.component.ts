@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
 import { DocumentTypeService } from '../../services/document-type/document-type.service';
 import { NgForm } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
 	selector: 'app-profile',
@@ -12,8 +13,8 @@ export class ProfileComponent implements OnInit {
 	user: any = {};
 	equals = false;
 	docTypes: any[] = [];
-	// imagenSubir: File;
-	// imagenTemp: string | ArrayBuffer;
+	imagenSubir: File;
+	imageTmp: string | ArrayBuffer;
 
 	constructor(public userService: UserService, public docTypeService: DocumentTypeService) {
 		this.docTypeService.getTypes().subscribe((res: any) => {
@@ -38,34 +39,34 @@ export class ProfileComponent implements OnInit {
 		});
 	}
 
-	seleccionImagen(archivo: File) {
-		// if (!archivo) {
-		// 	this.imagenSubir = null;
-		// 	return;
-		// }
-
-		// if (archivo.type.indexOf('image') < 0) {
-		// 	Swal.fire({
-		// 		title: 'No es una imagen',
-		// 		text: 'El archivo no es una imagen',
-		// 		icon: 'error',
-		// 	});
-		// 	this.imagenSubir = null;
-		// 	return;
-		// }
-
-		// this.imagenSubir = archivo;
-
-		// let reader = new FileReader();
-		// let urlImagenTemp = reader.readAsDataURL(archivo);
-
-		// reader.onloadend = () => (this.imagenTemp = reader.result);
+	seleccionImagen(file: File) {
 		console.log('Buscar Nueva Imagen');
+		if (!file) {
+			this.imagenSubir = null;
+			return;
+		}
+
+		if (file.type.indexOf('image') < 0) {
+			Swal.fire({
+				title: 'No es una imagen',
+				text: 'El archivo no es una imagen',
+				icon: 'error',
+			});
+			this.imagenSubir = null;
+			return;
+		}
+
+		this.imagenSubir = file;
+
+		let reader = new FileReader();
+		let urlImagenTemp = reader.readAsDataURL(file);
+
+		reader.onloadend = () => (this.imageTmp = reader.result);
 	}
 
 	cambiarImagen() {
-		// this.userService.cambiarImagen(this.imagenSubir, this.user.id);
-		console.log('Cambiar Imagen');
+		console.log(this.user);
+		this.userService.cambiarImagen(this.imagenSubir, this.user.id);
 	}
 
 	changePassword(password: string) {

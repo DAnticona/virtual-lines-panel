@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '../../models/user.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { URL_SERVICIOS } from '../../config/config';
 import { map, catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
@@ -178,11 +178,10 @@ export class UserService {
 		);
 	}
 
-	cambiarImagen(archivo: File, id: string) {
-		this.subirArchivoService
-			.subirArchivo(archivo, 'usuarios', id)
+	cambiarImagen(file: File, id: number) {
+		this.loadUserImageFile(file, id)
 			.then((res: any) => {
-				this.user.img = res.usuario.img;
+				this.user.image = res.image;
 				Swal.fire({
 					title: 'Imagen actualizada',
 					text: this.user.name,
@@ -327,5 +326,33 @@ export class UserService {
 				return throwError(err);
 			})
 		);
+	}
+
+	loadUserImageFile(file: File, id: number) {
+		return new Promise((resolve, reject) => {
+			let formData = new FormData();
+			let xhr = new XMLHttpRequest();
+
+			formData.append('image', file, file.name);
+
+			xhr.onreadystatechange = () => {
+				// 4: Termina el proceso
+				if (xhr.readyState === 4) {
+					if (xhr.status === 200) {
+						console.log('imagen subida');
+						resolve(JSON.parse(xhr.response));
+					} else {
+						console.log('Fallo la subida');
+						reject(xhr.response);
+					}
+				}
+			};
+
+			let url = URL_SERVICIOS + `/users/image/${id}`;
+
+			xhr.open('PUT', url, true);
+			xhr.setRequestHeader('Authorization', this.token);
+			xhr.send(formData);
+		});
 	}
 }

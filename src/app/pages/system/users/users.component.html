@@ -42,7 +42,7 @@
 					<tbody>
 						<tr *ngFor="let user of users" class="pointer" (dblclick)="choose(user)">
 							<td class="w70">
-								<img [src]="user.img | image" class="img-50 img-circle pointer" />
+								<img [src]="user.image | image" class="img-50 img-circle pointer" />
 							</td>
 							<td>{{ user.username }}</td>
 							<td>{{ user.name }}</td>

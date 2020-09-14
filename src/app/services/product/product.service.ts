@@ -12,8 +12,8 @@ import { throwError } from 'rxjs';
 export class ProductService {
 	constructor(public userService: UserService, public http: HttpClient) {}
 
-	getProducts() {
-		let url = URL_SERVICIOS + '/products';
+	getProducts(pageNumber: number) {
+		let url = URL_SERVICIOS + `/products/slice/${pageNumber}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({

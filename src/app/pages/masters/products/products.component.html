@@ -64,6 +64,29 @@
 						</tbody>
 					</table>
 				</div>
+				<nav *ngIf="pages > 1" aria-label="Page navigation example">
+					<ul class="pagination justify-content-center">
+						<li *ngIf="pageNu !== 1 && pageNu !== 2" class="page-item">
+							<a class="page-link pointer" (click)="getProducts(pageNu - 2)" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+							</a>
+						</li>
+						<li *ngIf="pageNu !== 1" class="page-item">
+							<a class="page-link pointer" (click)="getProducts(pageNu - 1)">{{ pageNu - 1 }}</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link pointer bg-light-info" (click)="getProducts(pageNu)">{{ pageNu }}</a>
+						</li>
+						<li *ngIf="pageNu !== pages" class="page-item">
+							<a class="page-link pointer" (click)="getProducts(pageNu + 1)">{{ pageNu + 1 }}</a>
+						</li>
+						<li *ngIf="pageNu !== pages && pageNu != pages - 1" class="page-item">
+							<a class="page-link pointer" (click)="getProducts(pageNu + 2)" aria-label="Next">
+								<span aria-hidden="true">&raquo;</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
 				<div class="row">
 					<div class="col-md-6">
 						<button class="btn btn-info waves-effect waves-light m-r-10" (click)="new()">

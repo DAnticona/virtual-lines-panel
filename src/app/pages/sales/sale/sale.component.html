@@ -34,7 +34,7 @@
 						<div class="form-group">
 							<label for="exampleInputuname">Documento del Cliente</label>
 							<div class="input-group">
-								<div class="input-group-addon"><i class="fa fa-eye"></i></div>
+								<div class="input-group-addon"><i class="fa fa-address-card-o"></i></div>
 								<input
 									[(ngModel)]="client.document"
 									name="document"
@@ -48,7 +48,7 @@
 						<div class="form-group">
 							<label for="exampleInputuname">Nombre del Cliente</label>
 							<div class="input-group">
-								<div class="input-group-addon"><i class="fa fa-eye"></i></div>
+								<div class="input-group-addon"><i class="ti-user"></i></div>
 								<input
 									[(ngModel)]="client.name"
 									name="name"
@@ -62,7 +62,7 @@
 						<div class="form-group">
 							<label for="exampleInputuname">Fecha de Venta</label>
 							<div class="input-group">
-								<div class="input-group-addon"><i class="fa fa-eye"></i></div>
+								<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
 								<input
 									[(ngModel)]="sale.date"
 									name="date"
@@ -74,7 +74,7 @@
 								/>
 							</div>
 						</div>
-						<div class="form-group row">
+						<div *ngIf="!nuevaVenta" class="form-group row">
 							<div class="col-md-12">
 								<div class="checkbox checkbox-primary pull-left p-t-0">
 									<input
@@ -286,7 +286,7 @@
 							<div class="form-group">
 								<label for="productName">Producto</label>
 								<div class="input-group">
-									<div class="input-group-addon"><i class="ti-check-box"></i></div>
+									<div class="input-group-addon"><i class="fa fa-product-hunt"></i></div>
 									<input
 										[(ngModel)]="item.productName"
 										name="productName"
@@ -301,7 +301,7 @@
 								<div class="col-6 form-group">
 									<label for="quantity">Cantidad</label>
 									<div class="input-group">
-										<div class="input-group-addon"><i class="ti-check-box"></i></div>
+										<div class="input-group-addon"><i class="fa fa-sort-numeric-asc"></i></div>
 										<input
 											[(ngModel)]="item.quantity"
 											name="quantity"
@@ -315,7 +315,7 @@
 								<div class="col-6 form-group">
 									<label for="unitPrice">Precio Unitario</label>
 									<div class="input-group">
-										<div class="input-group-addon"><i class="fa fa-eye"></i></div>
+										<div class="input-group-addon"><i class="fa fa-money"></i></div>
 										<input
 											[(ngModel)]="item.unitPrice"
 											name="unitPrice"
