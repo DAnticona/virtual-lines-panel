@@ -12,8 +12,8 @@ import { throwError } from 'rxjs';
 export class SaleService {
 	constructor(public userService: UserService, public http: HttpClient) {}
 
-	getSales(pageNumber: number) {
-		let url = URL_SERVICIOS + `/sales/slice/${pageNumber}`;
+	getSales(startDate: string, endDate: string) {
+		let url = URL_SERVICIOS + `/sales/from/${startDate}/to/${endDate}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({

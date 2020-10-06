@@ -12,6 +12,12 @@ export class ClientsComponent implements OnInit {
 	cargando = true;
 
 	constructor(public clientService: ClientService, public router: Router) {
+		this.getClients();
+	}
+
+	ngOnInit(): void {}
+
+	getClients() {
 		this.clientService.getClients().subscribe((res: any) => {
 			console.log(res);
 			this.clients = res;
@@ -19,18 +25,6 @@ export class ClientsComponent implements OnInit {
 			this.cargando = false;
 		});
 	}
-
-	ngOnInit(): void {}
-
-	// getClients(pageNu: number) {
-	// 	// console.log(pageNu);
-	// 	this.clientService.getClients(pageNu).subscribe((res: any) => {
-	// 		this.clients = res.object;
-	// 		this.pageNu = Number(pageNu);
-	// 		// this.pages = new Array(Math.ceil(res.count / 10));
-	// 		// this.pages = new Array(Math.ceil(10));
-	// 	});
-	// }
 
 	dbClick(cliente: any) {
 		this.router.navigate(['/clients', cliente.clientId]);
@@ -40,14 +34,31 @@ export class ClientsComponent implements OnInit {
 		this.router.navigate(['/clients', 'new']);
 	}
 
-	search(term: string) {
-		this.clientService.seacrhClientByDocument(term).subscribe((res: any) => {
-			console.log(res);
-			if (res) {
-				this.router.navigate(['/clients', res.clientId]);
-			} else {
-				return;
+	search(type: string, term: string) {
+		this.cargando = true;
+		if (term) {
+			if (type === '1') {
+				this.clientService.seacrhClientByDocument(term).subscribe((res: any) => {
+					console.log(res);
+					if (res) {
+						this.cargando = false;
+						this.router.navigate(['/clients', res.clientId]);
+					} else {
+						this.cargando = false;
+						return;
+					}
+				});
+			} else if (type === '2') {
+				this.clientService.seacrhClientByName(term).subscribe((res: any) => {
+					console.log(res);
+					if (res.object) {
+						this.clients = res.object;
+					}
+					this.cargando = false;
+				});
 			}
-		});
+		} else {
+			this.getClients();
+		}
 	}
 }

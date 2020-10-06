@@ -30,6 +30,7 @@ export class SaleComponent implements OnInit {
 	product: any = {};
 	idProductSelected: number;
 	stocks: any[] = [];
+	stock: any = {};
 	idStockSelected: number;
 	nuevaVenta = true;
 	active = true;
@@ -58,15 +59,19 @@ export class SaleComponent implements OnInit {
 					this.sale.date = this.datePipe.transform(new Date(res.date), 'yyyy-MM-dd');
 					this.items = res.details;
 					for (let i of this.items) {
-						this.productService.getProductById(i.stock.productId).subscribe((res1: any) => {
-							console.log(res1);
-							i.productName = res1.name;
-							console.log(this.items);
-						});
+						i.serviceFg = i.serviceFg === 'S' ? true : false;
+						if (!i.serviceFg) {
+							this.productService.getProductById(i.stock.productId).subscribe((res1: any) => {
+								console.log(res1);
+								i.serviceName = res1.name;
+								console.log(this.items);
+							});
+						}
 					}
 					if (this.sale.client) {
 						this.getClientById(this.sale.client.clientId);
 					}
+					this.cargando = false;
 				});
 			}
 		});
@@ -145,39 +150,47 @@ export class SaleComponent implements OnInit {
 
 	addItem() {
 		this.item = {};
-		this.getStocks();
+		this.item.uuid = uuid();
+		this.item.serviceFg = true;
+		this.item.quantity = 1.0;
+		this.item.unitPrice = 0.0;
+		this.item.totalPrice = this.item.quantity * this.item.unitPrice;
+		this.items.push(this.item);
+	}
+
+	service(item: any) {
+		console.log(item);
+		if (!item.serviceFg) {
+			this.getStocks();
+			open_modal('item');
+		} else {
+			this.item.productId = null;
+			this.item.stockId = null;
+		}
 	}
 
 	selectStock(stock: any) {
 		console.log(stock);
 		this.idProductSelected = stock.productId;
 		this.idStockSelected = stock.stockId;
-		this.item.unitPrice = stock.unitPrice;
-		this.item.productName = stock.productName;
-		this.item.productId = stock.productId;
-		this.item.stockId = stock.stockId;
+		this.stock = stock;
 	}
 
-	getItem(form: NgForm) {
-		if (form.invalid) {
-			return;
-		}
-
-		if (!this.item.uuid) {
-			this.item.uuid = uuid();
-			this.items.push(this.item);
-		}
-
+	getItem() {
+		this.item.unitPrice = this.stock.unitPrice;
+		this.item.serviceName = this.stock.productName;
+		this.item.productId = this.stock.productId;
+		this.item.stockId = this.stock.stockId;
 		this.item.totalPrice = this.item.quantity * this.item.unitPrice;
 		this.getAmount();
-		console.log(this.item);
 		cierra_modal('item');
 	}
 
-	editItem(item: any) {
-		console.log(item);
-		this.item = item;
-		this.getStocks();
+	closeModalItems() {
+		if (!this.item.productId) {
+			this.item.serviceFg = true;
+		}
+		cierra_modal('item');
 	}
 
 	deleteItem(item: any) {
@@ -198,6 +211,18 @@ export class SaleComponent implements OnInit {
 		});
 	}
 
+	getTotalPrice(item: any) {
+		item.totalPrice = item.quantity * item.unitPrice;
+		this.getAmount();
+	}
+
+	isNumber(value: any): boolean {
+		if (isNaN(value)) {
+			return false;
+		}
+		return true;
+	}
+
 	getAmount() {
 		let amount = 0;
 		for (let i of this.items) {
@@ -215,14 +240,33 @@ export class SaleComponent implements OnInit {
 		}
 	}
 
-	guardar() {
-		console.log(this.sale);
+	guardar(f: NgForm) {
+		if (f.invalid) {
+			return;
+		}
+
+		this.cargando = true;
+
+		for (let i of this.items) {
+			i.serviceFg = i.serviceFg ? 'S' : 'N';
+			if (isNaN(i.quantity) || isNaN(i.unitPrice) || isNaN(i.totalPrice)) {
+				return;
+			}
+		}
+
 		if (!this.sale.saleId) {
 			this.sale.details = this.items;
-			this.saleService.createSale(this.sale).subscribe((res: any) => {
-				console.log(res);
-				this.router.navigate(['/sales', res.saleId]);
-			});
+			console.log(this.sale);
+			this.saleService.createSale(this.sale).subscribe(
+				(res: any) => {
+					console.log(res);
+					this.cargando = false;
+					this.router.navigate(['/sales', res.saleId]);
+				},
+				(err: any) => {
+					this.cargando = false;
+				}
+			);
 		}
 	}
 

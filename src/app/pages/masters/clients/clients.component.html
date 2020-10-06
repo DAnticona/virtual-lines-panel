@@ -3,17 +3,23 @@
 		<div class="card">
 			<div class="card-body">
 				<div class="row">
-					<div class="col-md-10 form-group">
+					<div class="col-md-3 form-group">
+						<select #type class="form-control custom-select" name="documentTypeId">
+							<option value="1">Nro Documento</option>
+							<option value="2">Nombre</option>
+						</select>
+					</div>
+					<div class="col-md-7 form-group">
 						<input
 							#term
 							type="text"
 							class="form-control"
-							placeholder="Ingrese el RUC del cliente"
-							(keyup.enter)="search(term.value)"
+							placeholder="Búsqueda de clientes"
+							(keyup.enter)="search(type.value, term.value)"
 						/>
 					</div>
 					<div class="col-md-2 form-group">
-						<button class="btn btn-outline-info btn-block mb-2" (click)="search(term.value)">
+						<button class="btn btn-outline-info btn-block mb-2" (click)="search(type.value, term.value)">
 							<i class="fa fa-search fa-fw"></i>
 						</button>
 					</div>

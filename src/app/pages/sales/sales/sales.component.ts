@@ -1,31 +1,37 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SaleService } from '../../../services/sale/sale.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
 	selector: 'app-sales',
 	templateUrl: './sales.component.html',
 	styles: [],
+	providers: [DatePipe],
 })
 export class SalesComponent implements OnInit {
 	cargando = false;
 	sales: any[] = [];
-	pageNu = 1;
-	pages = 1;
-	constructor(public router: Router, public saleService: SaleService) {
-		this.saleService.getSales(this.pageNu).subscribe((res: any) => {
-			console.log(res);
-			this.sales = res.object;
-			this.pages = Math.ceil(res.count / 10);
-		});
+	startDate: string;
+	endDate: string;
+	constructor(public router: Router, public saleService: SaleService, public datePipe: DatePipe) {
+		this.startDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+		this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+		this.getSales();
 	}
 
-	getSales(pageNu: number) {
-		// console.log(pageNu);
-		this.saleService.getSales(pageNu).subscribe((res: any) => {
-			this.sales = res.object;
-			this.pageNu = Number(pageNu);
-		});
+	getSales() {
+		this.cargando = true;
+		this.saleService.getSales(this.startDate, this.endDate).subscribe(
+			(res: any) => {
+				console.log(res);
+				this.sales = res.object;
+				this.cargando = false;
+			},
+			(err: any) => {
+				this.cargando = false;
+			}
+		);
 	}
 
 	ngOnInit(): void {}

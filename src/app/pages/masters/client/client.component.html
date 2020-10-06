@@ -127,6 +127,7 @@
 								class="form-control custom-select"
 								[(ngModel)]="client.documentTypeId"
 								name="documentTypeId"
+								required
 							>
 								<option *ngFor="let type of docTypes" [ngValue]="type.id">{{ type.name }}</option>
 							</select>

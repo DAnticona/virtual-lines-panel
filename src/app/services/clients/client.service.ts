@@ -78,6 +78,28 @@ export class ClientService {
 		);
 	}
 
+	seacrhClientByName(term: string) {
+		let url = URL_SERVICIOS + `/clients/name/${term}`;
+
+		const httpOptions = {
+			headers: new HttpHeaders({
+				Authorization: `${this.userService.token}`,
+				'Content-Type': 'application/json',
+			}),
+		};
+
+		return this.http.get(url, httpOptions).pipe(
+			map(res => {
+				return res;
+			}),
+			catchError(err => {
+				console.log(err);
+				Swal.fire(err.error.message, err.error.message, 'error');
+				return throwError(err);
+			})
+		);
+	}
+
 	createClient(client: any) {
 		let url = URL_SERVICIOS + `/clients`;
 

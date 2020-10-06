@@ -44,6 +44,8 @@ export class InputsComponent implements OnInit {
 	}
 
 	search(term: string) {
+		this.pageNu = 1;
+		this.pages = 1;
 		if (term) {
 			this.cargando = true;
 			this.productService.seacrhProductByName(term).subscribe((res: any) => {

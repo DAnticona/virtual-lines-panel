@@ -3,8 +3,8 @@
 		<div class="card">
 			<div class="card-body">
 				<h4 class="card-title">Venta</h4>
-				<form ngNativeValidate #f="ngForm" (submit)="guardar()" class="form p-t-20">
-					<fieldset>
+				<form ngNativeValidate #f="ngForm" (submit)="guardar(f)" class="form p-t-20">
+					<fieldset [disabled]="cargando">
 						<div class="form-group">
 							<label for="exampleInputuname">Id</label>
 							<div class="input-group">
@@ -74,6 +74,34 @@
 								/>
 							</div>
 						</div>
+						<div class="form-group">
+							<label for="exampleInputuname">Destino</label>
+							<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-map-marker"></i></div>
+								<input
+									[(ngModel)]="sale.destination"
+									name="destination"
+									type="text"
+									class="form-control"
+									placeholder="Destino de la venta"
+									[disabled]="!nuevaVenta"
+								/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputuname">Observación</label>
+							<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-commenting-o"></i></div>
+								<input
+									[(ngModel)]="sale.observation"
+									name="observation"
+									type="text"
+									class="form-control"
+									placeholder="Observaciones de la venta"
+									[disabled]="!nuevaVenta"
+								/>
+							</div>
+						</div>
 						<div *ngIf="!nuevaVenta" class="form-group row">
 							<div class="col-md-12">
 								<div class="checkbox checkbox-primary pull-left p-t-0">
@@ -93,70 +121,119 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="table-responsive">
-									<table class="table table-hover color-table info-table">
-										<thead>
-											<tr class="text-sm-center">
-												<th></th>
-												<th>Item</th>
-												<th>Cantidad</th>
-												<th>Descripción</th>
-												<th>Precio Unitario</th>
-												<th>Importe</th>
-												<th></th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr class="pointer" *ngFor="let item of items; let i = index">
-												<td>
-													<button
-														type="button"
-														class="btn btn-outline-secondary btn-sm"
-														[disabled]="!nuevaVenta"
-														data-toggle="modal"
-														data-target="#item"
-														(click)="editItem(item)"
-													>
-														<i class="fa fa-pencil"></i>
-													</button>
-												</td>
-												<td>{{ i + 1 }}</td>
-												<td>{{ item.quantity }}</td>
-												<td>{{ item.productName }}</td>
-												<td>{{ item.unitPrice | currency: 'S/.' }}</td>
-												<td>{{ item.totalPrice | currency: 'S/.' }}</td>
-												<td>
-													<button
-														type="button"
-														class="btn btn-outline-danger btn-sm"
-														[disabled]="!nuevaVenta"
-														(click)="deleteItem(item)"
-													>
-														<i class="fa fa-trash"></i>
-													</button>
-												</td>
-											</tr>
-											<tr>
-												<th colspan="6">
-													<button
-														type="button"
-														class="btn btn-info waves-effect waves-light m-r-10"
-														[disabled]="!nuevaVenta"
-														data-toggle="modal"
-														data-target="#item"
-														(click)="addItem()"
-													>
-														<i class="fa fa-plus fa-fw"></i>
-													</button>
-												</th>
-											</tr>
-										</tbody>
-										<tbody>
-											<tr>
-												<th colspan="5">Total Venta</th>
-												<th>{{ sale.amount | currency: 'S/.' }}</th>
-											</tr>
-										</tbody>
-									</table>
+									<fieldset [disabled]="!nuevaVenta">
+										<table class="table table-hover color-table info-table">
+											<thead>
+												<tr>
+													<th style="width: 10%">Servicio</th>
+													<th style="width: 10%" class="text-center">Item</th>
+													<th style="width: 10%" class="text-center">Cant.</th>
+													<th style="width: 40%" class="text-center">Descripción del producto / servicio</th>
+													<th style="width: 10%" class="text-center">Precio U. S/.</th>
+													<th style="width: 10%" class="text-center">Importe S/.</th>
+													<th style="width: 10%" class="text-center"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr class="pointer" *ngFor="let it of items; let i = index">
+													<td>
+														<div [hidden]="cargando" class="checkbox checkbox-primary pull-left p-t-0">
+															<input
+																[(ngModel)]="it.serviceFg"
+																name="serviceFg-{{ i }}"
+																[id]="i + 1"
+																type="checkbox"
+																class="filled-in chk-col-indigo"
+																(change)="service(it)"
+															/>
+															<label for="{{ i + 1 }}"></label>
+														</div>
+													</td>
+													<td>
+														<input
+															type="text"
+															[value]="i + 1"
+															class="form-control form-control-sm"
+															readonly
+														/>
+													</td>
+													<td>
+														<input
+															[(ngModel)]="it.quantity"
+															name="quantity-{{ i }}"
+															[value]="it.quantity"
+															type="text"
+															class="form-control form-control-sm"
+															(keyup)="getTotalPrice(item)"
+														/>
+														<small *ngIf="!isNumber(it.quantity)" class="form-text text-danger">
+															cantidad inválida
+														</small>
+													</td>
+													<td>
+														<input
+															name="serviceName-{{ i }}"
+															[(ngModel)]="it.serviceName"
+															[value]="it.serviceName"
+															type="text"
+															class="form-control form-control-sm"
+														/>
+													</td>
+													<td>
+														<input
+															name="unitPrice-{{ i }}"
+															[(ngModel)]="it.unitPrice"
+															[value]="it.unitPrice"
+															type="text"
+															class="form-control form-control-sm"
+															(keyup)="getTotalPrice(it)"
+														/>
+														<small *ngIf="!isNumber(it.unitPrice)" class="form-text text-danger">
+															cantidad inválida
+														</small>
+													</td>
+													<td>
+														<input
+															name="totalPrice-{{ i }}"
+															[(ngModel)]="it.totalPrice"
+															[value]="it.totalPrice"
+															type="text"
+															class="form-control form-control-sm"
+															readonly
+														/>
+													</td>
+													<td>
+														<button
+															type="button"
+															class="btn btn-outline-danger btn-sm"
+															[disabled]="!nuevaVenta"
+															(click)="deleteItem(it)"
+														>
+															<i class="fa fa-trash"></i>
+														</button>
+													</td>
+												</tr>
+												<tr>
+													<th colspan="6">
+														<button
+															type="button"
+															class="btn btn-info waves-effect waves-light m-r-10"
+															[disabled]="!nuevaVenta"
+															(click)="addItem()"
+														>
+															<i class="fa fa-plus fa-fw"></i>
+														</button>
+													</th>
+												</tr>
+											</tbody>
+											<tbody>
+												<tr>
+													<th colspan="5">Total Venta</th>
+													<th>{{ sale.amount | currency: 'S/.' }}</th>
+												</tr>
+											</tbody>
+										</table>
+									</fieldset>
 								</div>
 								<div class="row">
 									<div class="col-md-6"></div>
@@ -178,7 +255,10 @@
 									[disabled]="!nuevaVenta"
 									class="btn btn-success waves-effect waves-light m-r-10"
 								>
-									<i class="fa fa-save fa-fw"></i>
+									<i
+										class="fa fa-fw"
+										[ngClass]="{ 'fa-spinner fa-pulse': cargando, 'fa-save': !cargando }"
+									></i>
 									Guardar
 								</button>
 							</div>
@@ -267,127 +347,70 @@
 <div class="modal fade" id="item" tabindex="-1" role="dialog" aria-labelledby="itemLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
-			<form
-				ngNativeValidate
-				#f1="ngForm"
-				(keydown.enter)="$event.preventDefault()"
-				(submit)="getItem(f1)"
-				class="form p-t-20"
-			>
-				<div class="modal-header">
-					<h5 class="modal-title" id="itemLabel">Items</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-12">
-							<div class="form-group">
-								<label for="productName">Producto</label>
-								<div class="input-group">
-									<div class="input-group-addon"><i class="fa fa-product-hunt"></i></div>
-									<input
-										[(ngModel)]="item.productName"
-										name="productName"
-										type="text"
-										class="form-control"
-										readonly
-										required
-									/>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-6 form-group">
-									<label for="quantity">Cantidad</label>
-									<div class="input-group">
-										<div class="input-group-addon"><i class="fa fa-sort-numeric-asc"></i></div>
-										<input
-											[(ngModel)]="item.quantity"
-											name="quantity"
-											type="text"
-											class="form-control"
-											placeholder="Cantidad"
-											required
-										/>
-									</div>
-								</div>
-								<div class="col-6 form-group">
-									<label for="unitPrice">Precio Unitario</label>
-									<div class="input-group">
-										<div class="input-group-addon"><i class="fa fa-money"></i></div>
-										<input
-											[(ngModel)]="item.unitPrice"
-											name="unitPrice"
-											type="text"
-											class="form-control"
-											placeholder="Precio unitario"
-											required
-										/>
-									</div>
-								</div>
-							</div>
-						</div>
+			<div class="modal-header">
+				<h5 class="modal-title" id="itemLabel">Items</h5>
+				<button type="button" class="close" (click)="closeModalItems()" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row txt-10">
+					<div class="col-10 form-group">
+						<input
+							#term1
+							type="text"
+							class="form-control form-control-sm"
+							placeholder="Nombre del producto"
+							(keyup.enter)="searchProduct(term1.value)"
+						/>
 					</div>
-					<hr />
-					<h6>Lista de Productos</h6>
-					<div class="row txt-10">
-						<div class="col-10 form-group">
-							<input
-								#term1
-								type="text"
-								class="form-control form-control-sm"
-								placeholder="Nombre del producto"
-								(keyup.enter)="searchProduct(term1.value)"
-							/>
-						</div>
-						<div class="col-2 form-group">
-							<button
-								type="button"
-								class="btn btn-outline-info btn-sm btn-block mb-2"
-								(click)="searchProduct(term1.value)"
-							>
-								<i class="fa fa-search fa-fw"></i>
-							</button>
-						</div>
+					<div class="col-2 form-group">
+						<button
+							type="button"
+							class="btn btn-outline-info btn-sm btn-block mb-2"
+							(click)="searchProduct(term1.value)"
+						>
+							<i class="fa fa-search fa-fw"></i>
+						</button>
 					</div>
-					<table class="table table-hover color-table info-table table-sm txt-10">
-						<thead>
-							<tr>
-								<th>Id</th>
-								<th>Nombre</th>
-								<th>Fecha</th>
-								<th>Medida</th>
-								<th>Stock</th>
-								<th>Costo Unitario</th>
-								<th>Precio Sugerido</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr
-								class="pointer"
-								*ngFor="let stock of stocks"
-								(click)="selectStock(stock)"
-								[ngClass]="{
-									'bg-light-info': idProductSelected == stock.productId && idStockSelected == stock.stockId
-								}"
-							>
-								<td>{{ stock.productId }}</td>
-								<td>{{ stock.productName }}</td>
-								<td>{{ stock.date | date: 'dd/MM/yyyy' }}</td>
-								<td>{{ stock.measureSign }}</td>
-								<td>{{ stock.quantity }}</td>
-								<td>{{ stock.unitCost | currency: 'S/.' }}</td>
-								<td>{{ stock.unitPrice | currency: 'S/.' }}</td>
-							</tr>
-						</tbody>
-					</table>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
-					<button type="submit" class="btn btn-outline-success">Seleccionar</button>
-				</div>
-			</form>
+				<table class="table table-hover color-table info-table table-sm txt-10">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Nombre</th>
+							<th>Fecha</th>
+							<th>Medida</th>
+							<th>Stock</th>
+							<th>Costo Unitario</th>
+							<th>Precio Sugerido</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr
+							class="pointer"
+							*ngFor="let s of stocks"
+							(click)="selectStock(s)"
+							(dblclick)="getItem()"
+							[ngClass]="{
+								'bg-light-info': idProductSelected == s.productId && idStockSelected == s.stockId
+							}"
+						>
+							<td>{{ s.productId }}</td>
+							<td>{{ s.productName }}</td>
+							<td>{{ s.date | date: 'dd/MM/yyyy' }}</td>
+							<td>{{ s.measureSign }}</td>
+							<td>{{ s.quantity }}</td>
+							<td>{{ s.unitCost | currency: 'S/.' }}</td>
+							<td>{{ s.unitPrice | currency: 'S/.' }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-danger" (click)="closeModalItems()">Cancelar</button>
+				<button type="button" class="btn btn-outline-success" (click)="getItem()">Seleccionar</button>
+			</div>
 		</div>
 	</div>
 </div>
