@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
 import { UserService } from '../user/user.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { URL_SERVICIOS } from '../../config/config';
 import { map, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import Swal from 'sweetalert2';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class StockService {
+	url = environment.url;
+
 	constructor(public userService: UserService, public http: HttpClient) {}
 
 	getStocksBiggerThanZero() {
-		let url = URL_SERVICIOS + `/stocks/bigger`;
+		let url = this.url + `/stocks/bigger`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -35,7 +37,7 @@ export class StockService {
 	}
 
 	getStocksByProductId(id: number) {
-		let url = URL_SERVICIOS + `/stocks/product/${id}`;
+		let url = this.url + `/stocks/product/${id}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -57,7 +59,7 @@ export class StockService {
 	}
 
 	getStockById(productId: number, stockId: number) {
-		let url = URL_SERVICIOS + `/stocks/product/${productId}/stock/${stockId}`;
+		let url = this.url + `/stocks/product/${productId}/stock/${stockId}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -79,7 +81,7 @@ export class StockService {
 	}
 
 	createStock(stock: any) {
-		let url = URL_SERVICIOS + `/stocks`;
+		let url = this.url + `/stocks`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -106,7 +108,7 @@ export class StockService {
 	}
 
 	updateStock(stock: any) {
-		let url = URL_SERVICIOS + `/stocks`;
+		let url = this.url + `/stocks`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({

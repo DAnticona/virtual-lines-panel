@@ -27,18 +27,18 @@
 					</ul>
 				</li>
 				<li class="nav-devider"></li>
-				<li class="nav-small-cap">PERSONAL</li>
-				<li *ngFor="let menu of sidebarService.menus">
-					<a class="has-arrow waves-effect waves-dark" aria-expanded="false"
-						><i [class]="menu.icon"></i
-						><span class="hide-menu">
+				<li class="nav-small-cap">MENÚ</li>
+				<li *ngFor="let menu of menus">
+					<a href="javascript:void(0)" class="has-arrow waves-effect waves-dark" aria-expanded="false">
+						<i [class]="menu.icon"></i>
+						<span class="hide-menu">
 							{{ menu.name }}
 							<span class="label label-rouded label-themecolor pull-right">
 								{{ menu.submenus.length }}
 							</span>
-						</span></a
-					>
-					<ul aria-expanded="false" class="collapse">
+						</span>
+					</a>
+					<ul aria-expanded="false">
 						<li *ngFor="let submenu of menu.submenus">
 							<a routerLinkActive="active" [routerLink]="[submenu.path]">{{ submenu.name }} </a>
 						</li>

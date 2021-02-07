@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Hospital } from '../../models/hospital.model';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { SubirArchivoService } from '../service.index';
-import { URL_SERVICIOS } from 'src/app/config/config';
 import { map } from 'rxjs/operators';
-import { UserService } from '../user/user.service';
 import Swal from 'sweetalert2';
+import { SubirArchivoService } from '../service.index';
+import { UserService } from '../user/user.service';
+import { environment } from '../../../environments/environment';
+import { Hospital } from '../../models/hospital.model';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class HospitalService {
+	url = environment.url;
+
 	token: string;
 	hospital: Hospital;
 	constructor(
@@ -24,17 +26,17 @@ export class HospitalService {
 	}
 
 	cargarHospitales(desde: number = 0) {
-		let url = URL_SERVICIOS + '/hospital?desde=' + desde;
+		let url = this.url + '/hospital?desde=' + desde;
 		return this.http.get(url);
 	}
 
 	obtenerHospital(id: string) {
-		let url = URL_SERVICIOS + '/hospital/' + id;
+		let url = this.url + '/hospital/' + id;
 		return this.http.get(url).pipe(map((res: any) => res.hospital));
 	}
 
 	borrarHospital(id: string) {
-		let url = URL_SERVICIOS + '/hospital/' + id;
+		let url = this.url + '/hospital/' + id;
 		url += '?token=' + this.token;
 
 		return this.http.delete(url).pipe(
@@ -46,7 +48,7 @@ export class HospitalService {
 	}
 
 	crearHospital(nombre: string) {
-		let url = URL_SERVICIOS + '/hospital';
+		let url = this.url + '/hospital';
 		url += '?token=' + this.token;
 		return this.http.post(url, { nombre }).pipe(
 			map(res => {
@@ -61,12 +63,12 @@ export class HospitalService {
 	}
 
 	buscarHospital(termino: string) {
-		let url = URL_SERVICIOS + '/busqueda/coleccion/hospitales/' + termino;
+		let url = this.url + '/busqueda/coleccion/hospitales/' + termino;
 		return this.http.get(url).pipe(map((res: any) => res.hospitales));
 	}
 
 	actualizarHospital(hospital: Hospital) {
-		let url = URL_SERVICIOS + '/hospital/' + hospital._id;
+		let url = this.url + '/hospital/' + hospital._id;
 
 		url += '?token=' + this.token;
 

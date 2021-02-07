@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
-import { URL_SERVICIOS } from '../../config/config';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { UserService } from '../user/user.service';
 import { map, catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class PersonService {
+	url = environment.url;
+
 	constructor(public userService: UserService, public http: HttpClient) {}
 
 	seacrhPersonByDocument(term: string) {
-		let url = URL_SERVICIOS + `/persons/document/${term}`;
+		let url = this.url + `/persons/document/${term}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({

@@ -22,26 +22,15 @@ export class UserComponent implements OnInit {
 		public docTypeService: DocumentTypeService,
 		public roleService: RoleService
 	) {
-		this.docTypeService.getTypes().subscribe((res: any) => {
-			console.log(res);
-			this.docTypes = res;
-		});
-
-		this.roleService.getRoles().subscribe((res: any) => {
-			console.log(res);
-			this.roles = res;
-		});
+		// this.roleService.getRoles().subscribe((res: any) => {
+		// 	console.log(res);
+		// 	this.roles = res;
+		// });
 
 		this.activatedRoute.params.subscribe(params => {
 			this.user.activeFg = this.active ? 'S' : 'N';
-			if (params.id !== 'nuevo') {
-				let id = Number(params.id);
-				this.userService.getUser(id).subscribe((res: any) => {
-					this.user = res;
-					this.user.roleId = res.role.roleId;
-					this.user.documentTypeId = res.docType.id;
-				});
-			}
+			this.user.roleId = 4;
+			this.user.storeFg = 'N';
 		});
 	}
 
@@ -54,17 +43,9 @@ export class UserComponent implements OnInit {
 
 	guardar() {
 		console.log(this.user);
-		if (this.user.id) {
-			this.userService.updateUser(this.user).subscribe((res: any) => {
-				console.log(res);
-				this.router.navigate(['/user', res.id]);
-			});
-		} else {
-			this.userService.createUser(this.user).subscribe((res: any) => {
-				console.log(res);
-				this.router.navigate(['/user', res.id]);
-			});
-		}
+		this.userService.createUser(this.user).subscribe((res: any) => {
+			console.log(res);
+		});
 	}
 
 	changePassword(password: string) {

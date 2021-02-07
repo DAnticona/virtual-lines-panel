@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
 import { UserService } from '../user/user.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { URL_SERVICIOS } from '../../config/config';
 import { map, catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class ProductService {
+	url = environment.url;
+
 	constructor(public userService: UserService, public http: HttpClient) {}
 
 	getProducts(pageNumber: number) {
-		let url = URL_SERVICIOS + `/products/slice/${pageNumber}`;
+		let url = this.url + `/products/slice/${pageNumber}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -35,7 +37,7 @@ export class ProductService {
 	}
 
 	getProductById(id: number) {
-		let url = URL_SERVICIOS + `/products/${id}`;
+		let url = this.url + `/products/${id}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -57,7 +59,7 @@ export class ProductService {
 	}
 
 	createProduct(product: any) {
-		let url = URL_SERVICIOS + `/products`;
+		let url = this.url + `/products`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -85,7 +87,7 @@ export class ProductService {
 	}
 
 	updateProduct(product: any) {
-		let url = URL_SERVICIOS + `/products`;
+		let url = this.url + `/products`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -113,7 +115,7 @@ export class ProductService {
 	}
 
 	seacrhProductByName(term: string) {
-		let url = URL_SERVICIOS + `/products/search/${term}`;
+		let url = this.url + `/products/search/${term}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({

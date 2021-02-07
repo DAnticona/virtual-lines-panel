@@ -1,19 +1,21 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserService } from '../user/user.service';
-import { URL_SERVICIOS } from '../../config/config';
 import { map, catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class SaleService {
+	url = environment.url;
+
 	constructor(public userService: UserService, public http: HttpClient) {}
 
 	getSales(startDate: string, endDate: string) {
-		let url = URL_SERVICIOS + `/sales/from/${startDate}/to/${endDate}`;
+		let url = this.url + `/sales/from/${startDate}/to/${endDate}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -35,7 +37,7 @@ export class SaleService {
 	}
 
 	getSaleById(id: number) {
-		let url = URL_SERVICIOS + `/sales/${id}`;
+		let url = this.url + `/sales/${id}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -57,7 +59,7 @@ export class SaleService {
 	}
 
 	createSale(sale: any) {
-		let url = URL_SERVICIOS + `/sales`;
+		let url = this.url + `/sales`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -84,7 +86,7 @@ export class SaleService {
 	}
 
 	anullSale(sale: any) {
-		let url = URL_SERVICIOS + `/sales/annull`;
+		let url = this.url + `/sales/annull`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({

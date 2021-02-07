@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
 import { UserService } from '../user/user.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { URL_SERVICIOS } from '../../config/config';
 import { map, catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class RoleService {
+	url = environment.url;
+
 	constructor(public userService: UserService, public http: HttpClient) {}
 
 	getRoles() {
-		let url = URL_SERVICIOS + '/roles';
+		let url = this.url + '/roles';
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -35,7 +37,7 @@ export class RoleService {
 	}
 
 	getRole(id: number) {
-		let url = URL_SERVICIOS + `/roles/${id}`;
+		let url = this.url + `/roles/${id}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -57,7 +59,7 @@ export class RoleService {
 	}
 
 	createRole(role: any) {
-		let url = URL_SERVICIOS + '/roles';
+		let url = this.url + '/roles';
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -85,7 +87,7 @@ export class RoleService {
 	}
 
 	updateRole(role: any) {
-		let url = URL_SERVICIOS + '/roles';
+		let url = this.url + '/roles';
 
 		const httpOptions = {
 			headers: new HttpHeaders({

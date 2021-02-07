@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { SidebarService } from 'src/app/services/service.index';
-import { User } from '../../models/user.model';
+import { Component } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
+import { MenuService } from '../../services/menu/menu.service';
 
 @Component({
 	selector: 'app-sidebar',
 	templateUrl: './sidebar.component.html',
 	styles: [],
 })
-export class SidebarComponent implements OnInit {
-	constructor(public sidebarService: SidebarService, public userService: UserService) {}
-
-	ngOnInit(): void {
-		this.sidebarService.cargarMenu();
+export class SidebarComponent {
+	menus: any[] = [];
+	constructor(public menuService: MenuService, public userService: UserService) {
+		console.log(this.userService);
+		this.menuService.getMenus().subscribe((res: any) => {
+			this.menus = res.object;
+		});
 	}
 }

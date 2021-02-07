@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
-import { UserService } from '../user/user.service';
-import { URL_SERVICIOS } from '../../config/config';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
-import { throwError } from 'rxjs';
+import { UserService } from '../user/user.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class ClientService {
+	url = environment.url;
+
 	constructor(public userService: UserService, public http: HttpClient) {}
 
 	getClients() {
-		let url = URL_SERVICIOS + '/clients';
+		let url = this.url + '/clients';
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -35,7 +37,7 @@ export class ClientService {
 	}
 
 	getClientById(id: number) {
-		let url = URL_SERVICIOS + `/clients/${id}`;
+		let url = this.url + `/clients/${id}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -57,7 +59,7 @@ export class ClientService {
 	}
 
 	seacrhClientByDocument(term: string) {
-		let url = URL_SERVICIOS + `/clients/search/${term}`;
+		let url = this.url + `/clients/search/${term}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -79,7 +81,7 @@ export class ClientService {
 	}
 
 	seacrhClientByName(term: string) {
-		let url = URL_SERVICIOS + `/clients/name/${term}`;
+		let url = this.url + `/clients/name/${term}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -101,7 +103,7 @@ export class ClientService {
 	}
 
 	createClient(client: any) {
-		let url = URL_SERVICIOS + `/clients`;
+		let url = this.url + `/clients`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -129,7 +131,7 @@ export class ClientService {
 	}
 
 	updateClient(client: any) {
-		let url = URL_SERVICIOS + `/clients`;
+		let url = this.url + `/clients`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({

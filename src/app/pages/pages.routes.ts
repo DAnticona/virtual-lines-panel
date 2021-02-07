@@ -19,6 +19,10 @@ import { ProductComponent } from './masters/product/product.component';
 import { MeasureComponent } from './masters/measure/measure.component';
 import { InputComponent } from './inventory/input/input.component';
 import { SaleComponent } from './sales/sale/sale.component';
+import { StoresComponent } from './masters/stores/stores.component';
+import { CategoriesComponent } from './masters/categories/categories.component';
+import { UserActiveGuard } from '../services/guards/user-active.guard';
+import { CategoryComponent } from './masters/category/category.component';
 
 const pagesRoutes: Routes = [
 	{
@@ -44,6 +48,10 @@ const pagesRoutes: Routes = [
 	// Sales
 	{ path: 'sales', component: SalesComponent, data: { titulo: 'Ventas' } },
 	{ path: 'sales/:id', component: SaleComponent, data: { titulo: 'Detalle de Venta' } },
+	// stores
+	{ path: 'stores', component: StoresComponent, data: { titulo: 'Establecimientos' } },
+	{ path: 'categories', component: CategoriesComponent, data: { titulo: 'Categorias' } },
+	{ path: 'category', component: CategoryComponent, data: { titulo: 'Nueva Categoría' } },
 	// System
 	{
 		path: 'users',

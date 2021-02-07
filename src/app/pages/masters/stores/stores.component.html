@@ -8,7 +8,7 @@
 							#term
 							type="text"
 							class="form-control"
-							placeholder="Ingrese un nombre o correo electrónico"
+							placeholder="Ingrese un nombre de establecimiento"
 							(input)="search(term.value)"
 						/>
 					</div>
@@ -33,46 +33,45 @@
 	</div>
 </div>
 
-<div class="row animated fadeIn" *ngIf="!loading">
-	<div class="col-12">
+<div class="row">
+	<div class="col-md-12">
 		<div class="card">
 			<div class="card-body">
-				<table class="table table-hover color-table info-table">
-					<thead>
-						<tr>
-							<th></th>
-							<th>Email</th>
-							<th>Nombre</th>
-							<th>Rol</th>
-							<th>Establecimiento</th>
-							<th>Estado</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr *ngFor="let user of users">
-							<td class="w70">
-								<img [src]="user.image | image" class="img-50 img-circle pointer" />
-							</td>
-							<td>{{ user.email }}</td>
-							<td>{{ user.name }}</td>
-							<td>{{ user.role.name }}</td>
-							<td>{{ user.store?.publicName }}</td>
-							<td>
-								<div class="switch">
-									<label>
-										<input
-											type="checkbox"
-											[checked]="user.activeFg == 'S'"
-											[name]="user.id"
-											(change)="toggleActive(user, $event)"
-										/>
-										<span class="lever"></span>
-									</label>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				<h4 class="card-title">Lista de Productos</h4>
+				<div class="table-responsive">
+					<table class="table table-hover color-table info-table">
+						<thead>
+							<tr class="text-sm-center">
+								<th>Nombre</th>
+								<th>Categoría</th>
+								<th>Website</th>
+								<th>Teléfono</th>
+								<th>Activo?</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let store of stores">
+								<td>{{ store.publicName }}</td>
+								<td>{{ store.category.name }}</td>
+								<td>{{ store.website }}</td>
+								<td>{{ store.phone }}</td>
+								<td>
+									<div class="switch">
+										<label>
+											<input
+												type="checkbox"
+												[checked]="store.activeFg == 'S'"
+												[name]="store.id"
+												(change)="toggleActive(store, $event)"
+											/>
+											<span class="lever"></span>
+										</label>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 				<nav *ngIf="pages > 1" aria-label="Page navigation example">
 					<ul class="pagination justify-content-center">
 						<li *ngIf="pageNu > 2" class="page-item">
@@ -96,13 +95,6 @@
 						</li>
 					</ul>
 				</nav>
-				<div class="row">
-					<div class="col-md-6">
-						<button class="btn btn-info waves-effect waves-light m-r-10" (click)="new()">
-							<i class="fa fa-plus fa-fw"></i>Nuevo
-						</button>
-					</div>
-				</div>
 			</div>
 		</div>
 	</div>

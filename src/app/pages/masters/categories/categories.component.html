@@ -1,0 +1,97 @@
+<div class="row animated fadeIn" *ngIf="loading">
+	<div class="col-sm-12 text-center">
+		<strong>Cargando</strong>
+		<br />
+		<i class="fa fa-spinner fa-pulse fa-2x"></i>
+		<br />
+		<span>Espere por favor</span>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-hover color-table info-table">
+						<thead>
+							<tr class="text-sm-center">
+								<th>Id</th>
+								<th>Categoría</th>
+								<th>Nro. Establecimientos</th>
+								<th>Activo?</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let category of categories">
+								<td>{{ category.categoryId }}</td>
+								<td>{{ category.name }}</td>
+								<td>{{ category.name }}</td>
+								<td>
+									<div class="switch">
+										<label>
+											<input
+												type="checkbox"
+												[checked]="category.activeFg == 'S'"
+												[name]="category.categoryId"
+												(change)="save(category, $event)"
+											/>
+											<span class="lever"></span>
+										</label>
+									</div>
+								</td>
+								<td>
+									<a href="javascript:void(0)" (click)="selectCategory(category)">Establecimientos</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<button class="btn btn-info waves-effect waves-light m-r-10" (click)="new()">
+							<i class="fa fa-plus fa-fw"></i>Nuevo
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card">
+			<div *ngIf="!stores.length" class="card-body">No hay establecimientos asociados a esta categoría</div>
+			<div *ngIf="stores.length" class="card-body">
+				<h2>{{ category.name | uppercase }}</h2>
+				<div class="table-responsive">
+					<table class="table table-hover color-table info-table">
+						<thead>
+							<tr class="text-sm-center">
+								<th>Nombre</th>
+								<th>Categoría</th>
+								<th>Website</th>
+								<th>Teléfono</th>
+								<th>Activo?</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let store of stores">
+								<td>{{ store.publicName }}</td>
+								<td>{{ store.category.name }}</td>
+								<td>{{ store.website }}</td>
+								<td>{{ store.phone }}</td>
+								<td>
+									<div class="switch">
+										<label>
+											<input type="checkbox" [checked]="store.activeFg == 'S'" [name]="store.id" disabled />
+											<span class="lever"></span>
+										</label>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,47 @@
+<div class="row animated fadeIn">
+	<div class="col-lg-7">
+		<div class="card">
+			<div class="card-body">
+				<form ngNativeValidate #f="ngForm" class="form p-t-20">
+					<div class="form-group">
+						<label for="exampleInputuname">Nombre</label>
+						<div class="input-group">
+							<div class="input-group-addon"><i class="ti-user"></i></div>
+							<input
+								[(ngModel)]="category.name"
+								name="name"
+								type="text"
+								class="form-control"
+								placeholder="Nombre de la categoría"
+								required
+							/>
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="col-md-12">
+							<div class="checkbox checkbox-primary pull-left p-t-0">
+								<input
+									[(ngModel)]="active"
+									name="active"
+									id="checkbox-signup"
+									type="checkbox"
+									class="filled-in chk-col-light-blue"
+									(change)="activeValue(active ? 'S' : 'N')"
+								/>
+								<label for="checkbox-signup">Activo?</label>
+							</div>
+						</div>
+					</div>
+					<button class="btn btn-danger waves-effect waves-light m-r-10" (click)="volver()">
+						<i class="fa fa-arrow-left fa-fw"></i>
+						Volver
+					</button>
+					<button class="btn btn-success waves-effect waves-light m-r-10" (click)="guardar()">
+						<i class="fa fa-save fa-fw"></i>
+						Guardar
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

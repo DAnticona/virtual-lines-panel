@@ -43,6 +43,9 @@ import { ProductComponent } from './masters/product/product.component';
 import { MeasureComponent } from './masters/measure/measure.component';
 import { InputComponent } from './inventory/input/input.component';
 import { SaleComponent } from './sales/sale/sale.component';
+import { StoresComponent } from './masters/stores/stores.component';
+import { CategoriesComponent } from './masters/categories/categories.component';
+import { CategoryComponent } from './masters/category/category.component';
 
 @NgModule({
 	declarations: [
@@ -76,6 +79,9 @@ import { SaleComponent } from './sales/sale/sale.component';
 		MeasureComponent,
 		InputComponent,
 		SaleComponent,
+		StoresComponent,
+		CategoriesComponent,
+		CategoryComponent,
 	],
 	exports: [DashboardComponent, ProgressComponent, Graficas1Component],
 	imports: [SharedModule, PAGES_ROUTES, FormsModule, ChartsModule, CommonModule, PipesModule],

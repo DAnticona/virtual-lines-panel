@@ -17,16 +17,10 @@ export class ProfileComponent implements OnInit {
 	imageTmp: string | ArrayBuffer;
 
 	constructor(public userService: UserService, public docTypeService: DocumentTypeService) {
-		this.docTypeService.getTypes().subscribe((res: any) => {
+		this.userService.getUser(this.userService.user.email).subscribe((res: any) => {
 			console.log(res);
-			this.docTypes = res;
-		});
-
-		this.userService.getUser(this.userService.user.id).subscribe((res: any) => {
-			console.log(res);
-			this.user = res;
-			this.user.roleId = res.role.roleId;
-			this.user.documentTypeId = res.docType.id;
+			this.user = res.object;
+			this.user.roleId = res.object.role.roleId;
 		});
 	}
 
@@ -66,7 +60,7 @@ export class ProfileComponent implements OnInit {
 
 	cambiarImagen() {
 		console.log(this.user);
-		this.userService.cambiarImagen(this.imagenSubir, this.user.id);
+		this.userService.cambiarImagen(this.imagenSubir, this.user.userId);
 	}
 
 	changePassword(password: string) {
@@ -74,7 +68,7 @@ export class ProfileComponent implements OnInit {
 			console.log('Las contraseñas no son iguales');
 			return;
 		}
-		this.userService.changePassword(this.user.id, password).subscribe(res => {
+		this.userService.changePassword(this.user.userId, password).subscribe(res => {
 			console.log(res);
 		});
 	}

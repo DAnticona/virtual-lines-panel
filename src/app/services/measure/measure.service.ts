@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
 import { UserService } from '../user/user.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { URL_SERVICIOS } from '../../config/config';
 import { map, catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class MeasureService {
+	url = environment.url;
+
 	constructor(public userService: UserService, public http: HttpClient) {}
 
 	getMeasures() {
-		let url = URL_SERVICIOS + '/measures';
+		let url = this.url + '/measures';
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -35,7 +37,7 @@ export class MeasureService {
 	}
 
 	getMeasureById(id: number) {
-		let url = URL_SERVICIOS + `/measures/${id}`;
+		let url = this.url + `/measures/${id}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -57,7 +59,7 @@ export class MeasureService {
 	}
 
 	createMeasure(measure: any) {
-		let url = URL_SERVICIOS + `/measures`;
+		let url = this.url + `/measures`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -85,7 +87,7 @@ export class MeasureService {
 	}
 
 	updateMeasure(measure: any) {
-		let url = URL_SERVICIOS + `/measures`;
+		let url = this.url + `/measures`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({

@@ -13,15 +13,15 @@ declare function init_plugins();
 })
 export class LoginComponent implements OnInit {
 	rememberme = false;
-	username: string;
+	email: string;
 
 	constructor(public router: Router, public userService: UserService) {}
 
 	ngOnInit(): void {
 		init_plugins();
 
-		this.username = localStorage.getItem('username') || '';
-		if (this.username.length > 1) {
+		this.email = localStorage.getItem('email') || '';
+		if (this.email.length > 1) {
 			this.rememberme = true;
 		}
 	}
@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
 		}
 
 		let user: any = {};
-		user.username = form.value.username;
+		user.email = form.value.email;
 		user.password = form.value.password;
 
 		this.userService.login(user, form.value.rememberme).subscribe(res => {

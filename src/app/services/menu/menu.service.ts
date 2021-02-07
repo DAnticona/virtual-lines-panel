@@ -1,19 +1,22 @@
 import { Injectable } from '@angular/core';
-import { UserService } from '../user/user.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { URL_SERVICIOS } from '../../config/config';
+import { throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
-import { throwError } from 'rxjs';
+import { UserService } from '../user/user.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class MenuService {
+	url = environment.url;
+	menuPath = environment.menu;
+
 	constructor(public userService: UserService, public http: HttpClient) {}
 
 	getMenus() {
-		let url = URL_SERVICIOS + '/menus';
+		let url = this.url + '/menus';
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -33,4 +36,19 @@ export class MenuService {
 			})
 		);
 	}
+	// getMenuOptions() {
+	// 	return this.http.get<any[]>(this.menuPath).pipe(
+	// 		map((res: any[]) => {
+	// 			const menus: any[] = [];
+	// 			res.forEach(menu => {
+	// 				menu.roles.forEach(role => {
+	// 					if (role.roleId === this.userService.user.role.roleId) {
+	// 						menus.push(menu);
+	// 					}
+	// 				});
+	// 			});
+	// 			return menus;
+	// 		})
+	// 	);
+	// }
 }

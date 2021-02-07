@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { URL_SERVICIOS } from '../../config/config';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class SubirArchivoService {
+	url = environment.url;
+
 	constructor() {}
 
 	subirArchivo(archivo: File, tipo: string, id: string) {
@@ -27,7 +29,7 @@ export class SubirArchivoService {
 				}
 			};
 
-			let url = URL_SERVICIOS + '/upload/' + tipo + '/' + id;
+			let url = this.url + '/upload/' + tipo + '/' + id;
 
 			xhr.open('PUT', url, true);
 			xhr.send(formData);
@@ -54,7 +56,7 @@ export class SubirArchivoService {
 				}
 			};
 
-			let url = URL_SERVICIOS + `/users/image/${id}`;
+			let url = this.url + `/users/image/${id}`;
 
 			xhr.open('PUT', url, true);
 			xhr.send(formData);

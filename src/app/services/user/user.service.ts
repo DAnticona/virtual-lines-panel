@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
 import { User } from '../../models/user.model';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { URL_SERVICIOS } from '../../config/config';
 import { map, catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { SubirArchivoService } from '../subir-archivo/subir-archivo.service';
 import { Observable, throwError } from 'rxjs';
 import { Menu } from '../../models/menu.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class UserService {
+	url = environment.url;
+
 	user: any = {};
 	token: string;
 	menus: any[] = [];
@@ -27,24 +29,24 @@ export class UserService {
 
 	login(user: any, rememberme: boolean = false) {
 		if (rememberme) {
-			localStorage.setItem('username', user.username);
+			localStorage.setItem('email', user.email);
 		} else {
-			localStorage.removeItem('username');
+			localStorage.removeItem('email');
 		}
 
-		let url = URL_SERVICIOS + '/login';
+		let url = this.url + '/login';
 
 		return this.http.post(url, user).pipe(
 			map((res: any) => {
-				console.log(res.user);
-				this.user = res.user;
-				this.menus = res.user.role.menus;
-				this.token = res.token;
+				console.log(res);
+				this.user = res.object;
+				// this.menus = res.user.role.menus;
+				this.token = res.object.token;
 
-				this.menus.sort((a, b) => a.orderNu - b.orderNu);
-				for (let menu of this.menus) {
-					menu.submenus.sort((a, b) => a.orderNu - b.orderNu);
-				}
+				// this.menus.sort((a, b) => a.orderNu - b.orderNu);
+				// for (let menu of this.menus) {
+				// 	menu.submenus.sort((a, b) => a.orderNu - b.orderNu);
+				// }
 
 				this.saveStorage(this.user, this.token, this.menus);
 				return true;
@@ -58,7 +60,7 @@ export class UserService {
 	}
 
 	// renuevaToken() {
-	// 	let url = URL_SERVICIOS + '/login/renuevatoken';
+	// 	let url = this.url + '/login/renuevatoken';
 	// 	url += '?token=' + this.token;
 	// 	console.log(url);
 
@@ -117,7 +119,7 @@ export class UserService {
 	}
 
 	createUser(user: any) {
-		let url = URL_SERVICIOS + '/users';
+		let url = this.url + '/user';
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -130,7 +132,7 @@ export class UserService {
 			map((res: any) => {
 				Swal.fire({
 					title: 'Usuario creado',
-					text: user.username,
+					text: user.email,
 					icon: 'success',
 					confirmButtonText: 'Ok',
 				});
@@ -145,7 +147,7 @@ export class UserService {
 	}
 
 	updateUser(user: any) {
-		let url = URL_SERVICIOS + '/users';
+		let url = this.url + '/user';
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -154,17 +156,17 @@ export class UserService {
 			}),
 		};
 
-		return this.http.put(url, user, httpOptions).pipe(
+		return this.http.post(url, user, httpOptions).pipe(
 			map((res: any) => {
 				console.log(res);
-				if (user.id === this.user.id) {
-					this.user = res;
+				if (user.userId === this.user.userId) {
+					this.user = res.object;
 					this.saveStorage(this.user, this.token, this.menus);
 				}
 
 				Swal.fire({
-					title: 'Usuario actualizado',
-					text: user.name,
+					title: user.name,
+					text: 'Usuario actualizado',
 					icon: 'success',
 				});
 
@@ -178,8 +180,8 @@ export class UserService {
 		);
 	}
 
-	cambiarImagen(file: File, id: number) {
-		this.loadUserImageFile(file, id)
+	cambiarImagen(file: File, userId: string) {
+		this.loadUserImageFile(file, userId)
 			.then((res: any) => {
 				this.user.image = res.image;
 				Swal.fire({
@@ -188,16 +190,15 @@ export class UserService {
 					icon: 'success',
 				});
 
-				this.saveStorage(res, this.token, this.menus);
+				this.saveStorage(res.object, this.token, this.menus);
 			})
 			.catch(res => {
 				console.log(res);
 			});
 	}
 
-	getUsers() {
-		console.log('get Users');
-		let url = URL_SERVICIOS + '/users';
+	getUsers(page: number) {
+		let url = this.url + `/user/slice/${page}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -218,8 +219,8 @@ export class UserService {
 		);
 	}
 
-	getUser(id: number) {
-		let url = URL_SERVICIOS + `/users/${id}`;
+	getUser(email: number) {
+		let url = this.url + `/user/${email}`;
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -241,12 +242,12 @@ export class UserService {
 	}
 
 	buscarUsuarios(termino: string) {
-		let url = URL_SERVICIOS + '/busqueda/coleccion/usuarios/' + termino;
+		let url = this.url + '/busqueda/coleccion/usuarios/' + termino;
 		return this.http.get(url).pipe(map((res: any) => res.usuarios));
 	}
 
 	borrarUsuario(id: string) {
-		let url = URL_SERVICIOS + '/usuario/' + id;
+		let url = this.url + '/usuario/' + id;
 		url += '?token=' + this.token;
 
 		return this.http.delete(url).pipe(
@@ -257,8 +258,8 @@ export class UserService {
 		);
 	}
 
-	changePassword(id: number, password: string) {
-		let url = URL_SERVICIOS + '/users/password';
+	changePassword(userId: string, password: string) {
+		let url = this.url + '/user/password';
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -268,16 +269,16 @@ export class UserService {
 		};
 
 		let user = {
-			id,
+			userId,
 			password,
 		};
 
-		return this.http.put(url, user, httpOptions).pipe(
+		return this.http.post(url, user, httpOptions).pipe(
 			map(res => {
 				console.log(res);
 				Swal.fire({
 					title: 'Contraseña actualizada',
-					text: this.user.username,
+					text: this.user.email,
 					icon: 'success',
 					onClose: () => {
 						this.logout();
@@ -295,7 +296,7 @@ export class UserService {
 	}
 
 	changeOtherPassword(id: number, password: string) {
-		let url = URL_SERVICIOS + '/users/password';
+		let url = this.url + '/users/password';
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -314,7 +315,7 @@ export class UserService {
 				console.log(res);
 				Swal.fire({
 					title: 'Contraseña actualizada',
-					text: res.username,
+					text: res.email,
 					icon: 'success',
 				});
 
@@ -328,12 +329,13 @@ export class UserService {
 		);
 	}
 
-	loadUserImageFile(file: File, id: number) {
+	loadUserImageFile(file: File, userId: string) {
 		return new Promise((resolve, reject) => {
 			let formData = new FormData();
 			let xhr = new XMLHttpRequest();
 
-			formData.append('image', file, file.name);
+			formData.append('file', file, file.name);
+			formData.append('userId', userId);
 
 			xhr.onreadystatechange = () => {
 				// 4: Termina el proceso
@@ -348,11 +350,41 @@ export class UserService {
 				}
 			};
 
-			let url = URL_SERVICIOS + `/users/image/${id}`;
+			let url = this.url + `/user/avatar`;
 
-			xhr.open('PUT', url, true);
+			xhr.open('POST', url, true);
 			xhr.setRequestHeader('Authorization', this.token);
 			xhr.send(formData);
 		});
+	}
+
+	searchByNameOrEmail(term: string) {
+		const url = `${this.url}/user/search/${term}`;
+
+		const httpOptions = {
+			headers: new HttpHeaders({
+				Authorization: `${this.token}`,
+				'Content-Type': 'application/json',
+			}),
+		};
+
+		return this.http.get(url, httpOptions);
+	}
+
+	isActive(email: string) {
+		const url = `${this.url}/user/${email}`;
+
+		const httpOptions = {
+			headers: new HttpHeaders({
+				Authorization: `${this.token}`,
+				'Content-Type': 'application/json',
+			}),
+		};
+
+		return this.http.get(url, httpOptions).pipe(
+			map((res: any) => {
+				return res.object.activeFg === 'S';
+			})
+		);
 	}
 }

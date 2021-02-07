@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import { User } from '../../../models/user.model';
 import { UserService } from '../../../services/user/user.service';
-import Swal from 'sweetalert2';
-import { ModalUploadService } from '../../../components/modal-upload/modal-upload.service';
-import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-usuarios',
@@ -15,65 +14,55 @@ export class UsersComponent implements OnInit {
 	desde: number = 0;
 
 	totalRegistros: number = 0;
-	cargando: boolean = true;
+	loading: boolean = true;
 
-	constructor(public userService: UserService, public router: Router) {}
+	pages: number;
+	pageNu: number;
 
-	ngOnInit(): void {
-		this.cargarUsuario();
+	constructor(public userService: UserService, public router: Router) {
+		this.pageNu = 1;
+		this.pages = 1;
 	}
 
-	cargarUsuario() {
-		this.cargando = true;
-		this.userService.getUsers().subscribe((res: any) => {
-			console.log(res);
-			this.totalRegistros = res.length;
-			this.users = res;
-			this.cargando = false;
+	ngOnInit(): void {
+		this.getStores(this.pageNu);
+	}
+
+	getStores(pageNu: number) {
+		this.loading = true;
+		this.userService.getUsers(pageNu).subscribe((res: any) => {
+			this.pages = Math.ceil(res.count / 12);
+			this.pageNu = pageNu;
+			this.users = res.object;
+			this.loading = false;
 		});
 	}
 
-	// cambiarDesde(valor: number) {
-	// 	let desde = this.desde + valor;
-	// 	if (desde >= this.totalRegistros) {
-	// 		return;
-	// 	}
+	search(term: string) {
+		this.pageNu = 1;
+		this.pages = 1;
 
-	// 	if (desde < 0) {
-	// 		return;
-	// 	}
-
-	// 	this.desde += valor;
-	// 	this.cargarUsuario();
-	// }
-
-	// buscarUsuario(termino: string) {
-	// 	if (termino.length <= 0) {
-	// 		this.cargarUsuario();
-	// 		return;
-	// 	}
-
-	// 	this.cargando = true;
-	// 	this.userService.buscarUsuarios(termino).subscribe((usuarios: User[]) => {
-	// 		this.usuarios = usuarios;
-	// 		this.cargando = false;
-	// 	});
-	// }
-
-	borrarUsuario(usuario: User) {
-		if (usuario.id === this.userService.user.id) {
-			Swal.fire({
-				title: 'No puede eliminar usuario',
-				text: 'No se puede eliminar a si mismo',
-				icon: 'error',
+		if (term) {
+			this.loading = true;
+			this.userService.searchByNameOrEmail(term).subscribe((res: any) => {
+				this.users = res.object;
+				this.loading = false;
 			});
-
-			return;
+		} else {
+			this.getStores(1);
 		}
+	}
+
+	toggleActive(user: any, event: any) {
+		if (user.store) {
+			user.storeId = user.store.storeId;
+		}
+		user.roleId = user.role.roleId;
+		const message = event.target.checked ? 'activar' : 'inactivar';
 
 		Swal.fire({
 			title: '¿Estas seguro?',
-			text: 'Está a punto de borrar a ' + usuario.name,
+			text: `¿Quieres ${message} este usuario? ${user.email}`,
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: '#3085d6',
@@ -81,27 +70,17 @@ export class UsersComponent implements OnInit {
 			confirmButtonText: 'Sí, ¡Estoy seguro!',
 		}).then(result => {
 			if (result.value) {
-				this.userService.borrarUsuario(usuario.id).subscribe(res => {
-					this.cargarUsuario();
+				user.activeFg = event.target.checked ? 'S' : 'N';
+				this.userService.updateUser(user).subscribe(res => {
+					console.log(res);
 				});
+			} else {
+				event.target.checked = !event.target.checked;
 			}
 		});
 	}
 
-	nuevo() {
-		this.router.navigate(['/user', 'nuevo']);
-	}
-
-	guardarUsuario(usuario: User) {
-		this.userService.updateUser(usuario).subscribe();
-	}
-
-	choose(user: any) {
-		console.log(user);
-		if (user.id === this.userService.user.id) {
-			this.router.navigate(['/perfil']);
-		} else {
-			this.router.navigate(['/user', user.id]);
-		}
+	new() {
+		this.router.navigate(['/user', 'new']);
 	}
 }
